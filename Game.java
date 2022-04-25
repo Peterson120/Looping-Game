@@ -13,7 +13,7 @@ Limit num of potions and one potion per turn
 
 public class Game 
 {
-    private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 3;
+    private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 1;
     private boolean potionUsed = false;
     final private String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"};
     private static Scanner scan;
@@ -42,6 +42,7 @@ public class Game
     public void newChallenger()
     {
         numOppsLeft--;
+        numPotions+=2;
         if(numOppsLeft == 1) challenger = new Boss();
         else if(numOppsLeft > 1) challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2);
     }
@@ -223,10 +224,18 @@ public class Game
             input();
             return;
         }
+        else if(numPotions <= 0) 
+        {
+            out.println("You have no more potions left");
+            sDelay(2);
+            input();
+            return;
+        }
         else if(choice.contains("atk") || choice.charAt(0) == 'a') 
         {
             int nextRand = srand.nextInt(95)+5;
             potionUsed = true;
+            numPotions--;
             atk += nextRand;
             turn++;
             atkDmgAnimation();
@@ -239,6 +248,7 @@ public class Game
         {
             int nextRand = 1-srand.nextInt(20)/100;
             potionUsed = true;
+            numPotions--;
             def += challenger.getAtk()*nextRand;
             turn++;
             out.println("\nYou used a defense potion. Your defense is now " + def);
@@ -249,6 +259,7 @@ public class Game
         {
             int nextRand = srand.nextInt(10);
             potionUsed = true;
+            numPotions--;
             hp *= nextRand;
             turn++;
             out.println("\nYou used a healing potion. Your health is now " + hp);
@@ -357,6 +368,45 @@ public class Game
         mDelay(400);
         printHP();
         out.println("ATK++");
+        out.println("   ");
+        out.println("   ");
+        out.println(" O ");
+        out.println("!T!");
+        out.println(" | ");
+        out.println("/ \\ ");
+    }
+
+    public void defAnimation()
+    {
+        printHP();
+        out.println("   ");
+        out.println("   ");
+        out.println("   ");
+        out.println(" O ");
+        out.println("!T!");
+        out.println(" |");
+        out.println("/ \\ ");
+        mDelay(400);
+        printHP();
+        out.println("   ");
+        out.println("   ");
+        out.println("DEF++");
+        out.println(" O ");
+        out.println("!T!");
+        out.println(" | ");
+        out.println("/ \\ ");
+        mDelay(400);
+        printHP();
+        out.println("   ");
+        out.println("DEF++");
+        out.println("   ");
+        out.println(" O ");
+        out.println("!T!");
+        out.println(" | ");
+        out.println("/ \\ ");
+        mDelay(400);
+        printHP();
+        out.println("DEF++");
         out.println("   ");
         out.println("   ");
         out.println(" O ");

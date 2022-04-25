@@ -30,7 +30,7 @@ public class Main
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 3 potions to start and you gain 2 for each opponent that you beat");
         Game.sDelay(5);
-        out.println("\nType OK to confirm");
+        out.println("\nType OK to continue");
         String user = scan.nextLine().toLowerCase();
         if(user.contains("ok")) return;
         rules();
