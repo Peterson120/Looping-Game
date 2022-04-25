@@ -6,6 +6,8 @@ import java.security.*;
 /*
 Ideas
 Counter Attack 50% chance + crit if opponent attacks on next turn
+block dmg
+user name
 */
 
 public class Game 
@@ -222,7 +224,7 @@ public class Game
             {
                 double blockAmount = block();
                 dmg *= blockAmount;
-                out.println("You blocked " + blockAmount*100 + "% of" + challenger.getName() + "'s attack");
+                out.println("\nYou blocked " + blockAmount*100 + "% of" + challenger.getName() + "'s attack");
                 sDelay(2);
             }
             hp-=dmg;
@@ -347,7 +349,7 @@ public class Game
         else
         {
             challenger.setHp(challenger.getHp()*nextRand);
-            out.println("\n" + challenger.getName() + " used a healing potion and gained " + (hp-originalHP) + " health");
+            out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-originalHP) + " health");
         }
         sDelay(2);
     }
