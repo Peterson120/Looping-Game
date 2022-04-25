@@ -10,14 +10,16 @@ public class Main
         scan = new Scanner(System.in);
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!\n");
-        out.println("Do you want to play?(Y/n)");
+        out.println("Do you want to begin?(Y/n)");
         String user = scan.nextLine();
         if(user.length() > 0)
         {
             switch(user.toLowerCase())
             {
                 case "y": break;
-                case "n": Game.printLoss(); scan.close(); System.exit(0); break;
+                case "n": 
+                    Game.sDelay(5);
+                    main(args);
             }
         }
         else main(args);
@@ -28,7 +30,7 @@ public class Main
     public static void rules()
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 3 potions to start and you gain 2 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks");
+        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 5 potions to start and you gain 3 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks");
         Game.sDelay(5);
         out.println("\nType OK to continue");
         String user = scan.nextLine().toLowerCase();

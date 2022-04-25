@@ -12,7 +12,7 @@ user name
 
 public class Game 
 {
-    private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 1; // Important Variables for Player
+    private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 5; // Important Variables for Player
     private boolean potionUsed = false; // Check if potion was used this turn
     final public static String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
     private static Scanner scan; // Scanner
@@ -40,7 +40,6 @@ public class Game
     public void newChallenger() // Create a challenger from the villain class
     {
         numOppsLeft--; // Decrease Opponents Left
-        numPotions+=2; // Increase Number of Potions
         if(numOppsLeft == 1) 
         {
             out.println("BOSS LEVEL");
@@ -105,7 +104,17 @@ public class Game
             turn++;
             return;
         }
-        else if(input.charAt(0) == 'g' || input.contains("give")) playAgain();
+        else if(input.charAt(0) == 'g' || input.contains("give")) 
+        {
+            clearScreen();
+            out.println("Are you sure you want to give up?(y/N)");
+            String user = scan.nextLine();
+            if(user.charAt(0) == 'y')
+            {
+                printLoss();
+                playAgain();
+            }
+        }
         input();
     }
 
@@ -195,11 +204,12 @@ public class Game
         if(turn % 2 == 0)
         {
             dmg -= challenger.getDef();
+            dmg = dmg < 0 ? 0:dmg;
             if(challenger.getLastMove().equals("block"))
             {
                 double blockAmount = block();
-                dmg *= blockAmount;
-                out.println("\n" + challenger.getName() + " blocked " + blockAmount*100 + "% of your attack");
+                dmg *= blockAmount/100;
+                out.println("\n" + challenger.getName() + " blocked " + blockAmount + "% of your attack");
                 sDelay(2);
             }
             potionUsed = false;
@@ -220,11 +230,12 @@ public class Game
         else
         {
             dmg -= def;
+            dmg = dmg < 0 ? 0:dmg;
             if(lastMove.equals("block"))
             {
                 double blockAmount = block();
-                dmg *= blockAmount;
-                out.println("\nYou blocked " + blockAmount*100 + "% of" + challenger.getName() + "'s attack");
+                dmg *= blockAmount/100;
+                out.println("\nYou blocked " + blockAmount + "% of " + challenger.getName() + "'s attack");
                 sDelay(2);
             }
             hp-=dmg;
@@ -288,9 +299,9 @@ public class Game
         sDelay(2);
     }
 
-    private double block() // Return a random block percentage
+    private int block() // Return a random block percentage
     {
-        return (srand.nextInt(75) + 25)/100;
+        return srand.nextInt(75) + 25;
     }
 
     public void dPotion() // Defense Potion Logic
@@ -337,18 +348,19 @@ public class Game
 
     public void hpPotion() // Health Potion
     {
-        int nextRand = srand.nextInt(10)/5+1, originalHP = turn % 2 == 0 ? hp : challenger.getHp();
+        double increase = srand.nextInt(2)+1.5;
+        int originalHP = turn % 2 == 0 ? hp : challenger.getHp();
         potionAnimation("HP");
         if(turn%2==0)
         {
             potionUsed = true;
             numPotions--;
-            hp *= nextRand;
+            hp *= increase;
             out.println("\nYou used a healing potion and gained " + (hp-originalHP) + " health");
         }
         else
         {
-            challenger.setHp(challenger.getHp()*nextRand);
+            challenger.setHp(challenger.getHp()*((int)increase));
             out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-originalHP) + " health");
         }
         sDelay(2);
@@ -377,6 +389,7 @@ public class Game
         out.println("    *    *         *    *       *            * *              *        *     *  *");
         out.println("    *     *       *      *     *          * *   * *           *        *      * *");
         out.println("    *       *****         *****            *     *       ***********   *        *");
+        sDelay(4);
     }
 
     public static void printLoss() // Print Player Loss
@@ -390,6 +403,7 @@ public class Game
         out.println("    *    *         *    *       *      *          *        *           *  *     ");
         out.println("    *     *       *      *     *       *           *      *            *  *     ");
         out.println("    *       *****         *****        *********     *****     *******    ******");
+        sDelay(4);
     }
 
     public String winner() // Return winner
@@ -402,7 +416,7 @@ public class Game
                 hp *= 1.5; // Give player 150% of their current HP
                 playerLevel++; // Increase Player Level
                 turn = 0; // Set turn to 0
-                numPotions+=2; // Increase Number of Potions
+                numPotions+=3; // Increase Number of Potions
                 newChallenger(); // Create another Challenger
                 return "n"; // Return No winner
             }
