@@ -1,3 +1,5 @@
+import javax.lang.model.util.ElementScanner6;
+
 public class Villain 
 {
     private int hp, atk, def; // Challenger's hp, atk, and def
@@ -30,19 +32,40 @@ public class Villain
 
     public void turn() // Challenger Take Turn Method
     {
-        int rand = Game.srand.nextInt(10);
-        if(rand > 5) //attack
+        Game.clearScreen();
+        Main.game.printHP();
+        int type = Game.srand.nextInt(10);
+        if(type > 4 || lastMove.equals("potion")) //attack
+        {
+            int typeAtk = Game.srand.nextInt(4);
+            if(typeAtk<=1) 
+            {
+                lastMove = "basic";
+                Main.game.basic();
+            }
+            else if(typeAtk == 2) 
+            {
+                lastMove = "counter";
+                Main.game.setTurn(Main.game.getTurn()+1);
+            }
+            else
+            {
+                lastMove = "slap";
+                Main.game.slap();
+            }
+        }
+        else if(type < 3) // potion
+        {
+            int potionType = Game.srand.nextInt(3);
+            lastMove = "potion";
+            if(potionType == 0) Main.game.atkPotion();
+            else if(potionType == 1) Main.game.dPotion();
+            else Main.game.hpPotion();
+        }
+        else // Block
         {
             Main.game.setTurn(Main.game.getTurn()+1);
-            
-        }
-        else if(rand < 3) // potion
-        {
-
-        }
-        else //block
-        {
-            Main.game.setTurn(Main.game.getTurn()+1);
+            lastMove = "block";
         }
     }
 }

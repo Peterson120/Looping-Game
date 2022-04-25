@@ -6,8 +6,6 @@ import java.security.*;
 /*
 Ideas
 Counter Attack 50% chance + crit if opponent attacks on next turn
-Block up to 100%
-Limit num of potions and one potion per turn
 */
 
 public class Game 
@@ -20,7 +18,7 @@ public class Game
     private Villain challenger; // Current Challenger
     private String lastMove = "none"; //Last move to check for blocks and counters
 
-    public Game()
+    public Game() // Game Constructor to set scanner, RNG, and a new challenger
     {
         newChallenger();
         scan = new Scanner(System.in);
@@ -37,17 +35,24 @@ public class Game
     public int getDef() {return def;}
     public void setDef(int def) {this.def = def;}
 
-    // Create a challenger from the villain class
-    public void newChallenger()
+    public void newChallenger() // Create a challenger from the villain class
     {
-        numOppsLeft--;
-        numPotions+=2;
-        if(numOppsLeft == 1) challenger = new Boss();
-        else if(numOppsLeft > 1) challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2);
+        numOppsLeft--; // Decrease Opponents Left
+        numPotions+=2; // Increase Number of Potions
+        if(numOppsLeft == 1) 
+        {
+            out.println("BOSS LEVEL");
+            challenger = new Boss(); // Create Boss if Only One Challenger Remains
+        }
+        else if(numOppsLeft == 2) 
+        {
+            out.println("The BOSS is Approaching!"); 
+            challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2);
+        }
+        else if(numOppsLeft > 1) challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2); // Create a regular Character
     }
     
-    // Print Challengers Hp using "|"
-    public void printChallengerHP(int health)
+    public void printChallengerHP(int health) // Print Challengers Hp using "|"
     {
         clearScreen();
         out.print(challenger.getName() + "'s Hp:");
@@ -56,21 +61,20 @@ public class Game
         out.println("");
     }
 
-    // Print Player's Hp using "|"
-    public void printPlayerHP(int health)
+    public void printPlayerHP(int health) // Print Player's Hp using "|"
     {
         out.print("Player Hp:                ");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
     
-    public void printHP(int challenger,int player) // print bars using custom health
+    public void printHP(int challenger,int player) // Print bars using custom health
     { 
         printChallengerHP(challenger);
         printPlayerHP(player);
     }
 
-    public void printHP() // print bars using current health
+    public void printHP() // Print bars using current health
     { 
         printChallengerHP(challenger.getHp());
         printPlayerHP(hp);
@@ -188,6 +192,7 @@ public class Game
         int pOldHp = hp; // Store player hp before damage
         if(turn % 2 == 0)
         {
+            dmg -= challenger.getDef();
             if(challenger.getLastMove().equals("block"))
             {
                 double blockAmount = block();
@@ -212,6 +217,7 @@ public class Game
         }
         else
         {
+            dmg -= def;
             if(lastMove.equals("block"))
             {
                 double blockAmount = block();
@@ -221,15 +227,15 @@ public class Game
             }
             hp-=dmg;
             challenger.setLastMove("basic");
-            out.println(challenger.getName() + " used a basic attack a did " + dmg + " damage!");
+            out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
             turn++;
             for(int i = 0; i < 3; i++) 
             {
                 printHP(cOldHp,pOldHp);
-                out.println(challenger.getName() + " used a basic attack a did " + dmg + " damage!");
+                out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
                 mDelay(200);
                 printHP();
-                out.println(challenger.getName() + " used a basic attack a did " + dmg + " damage!");
+                out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
                 mDelay(200);
             }
         }
@@ -246,12 +252,12 @@ public class Game
             switch(turn%2)
             {
                 case 0:
-                    out.println("You Missed");
+                    out.println("\nYou Missed");
                     turn++;
                     sDelay(2);
                     challenger.turn();
                 case 1:
-                    out.println(challenger.getName() + " Missed");
+                    out.println("\n" + challenger.getName() + " Missed");
                     turn++;
                     sDelay(2);
                     input();
@@ -264,7 +270,7 @@ public class Game
         if(turn % 2 == 0)
         {
             potionUsed = false;
-            out.println("You used slap! It caused emotional damage to " + challenger.getName() +"!");
+            out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
             lastMove = "slap";
             challenger.setHp(challenger.getHp()-1);
             challenger.setAtk(challenger.getAtk()-5);
@@ -272,7 +278,7 @@ public class Game
         }
         else
         {
-            out.println("You got slapped by " + challenger.getName() + "!");
+            out.println("\nYou got slapped by " + challenger.getName() + "!");
             hp--;
             atk-=5;
             turn++;
@@ -282,7 +288,7 @@ public class Game
 
     private double block() // Return a random block percentage
     {
-        return (100 - (srand.nextInt(75) + 25))/100;
+        return (srand.nextInt(75) + 25)/100;
     }
 
     public void dPotion() // Defense Potion Logic
@@ -388,18 +394,19 @@ public class Game
     {
         if(challenger.getHp() <= 0) 
         {
-            if(numOppsLeft <= 0)return "player";
+            if(numOppsLeft <= 0)return "player"; // Return Player Wins
             else 
             {
-                hp *= 1.5;
-                playerLevel++;
-                turn = 0;
-                newChallenger(); 
-                return "n";
+                hp *= 1.5; // Give player 150% of their current HP
+                playerLevel++; // Increase Player Level
+                turn = 0; // Set turn to 0
+                numPotions+=2; // Increase Number of Potions
+                newChallenger(); // Create another Challenger
+                return "n"; // Return No winner
             }
         }
-        else if(hp <= 0) return "boss";
-        else return "n";
+        else if(hp <= 0) return "boss"; // Return Boss Wins
+        return "n"; // Return No one won
     }
 
     public void playAgain() // Play Again Function
@@ -458,7 +465,7 @@ public class Game
         out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
-        mDelay(400);
+        mDelay(700);
     }
 
     private void printArray(String[] arr) {out.println(Arrays.toString(arr));} // Print given Array to String
