@@ -13,13 +13,13 @@ Limit num of potions and one potion per turn
 
 public class Game 
 {
-    private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 1;
-    private boolean potionUsed = false;
-    final private String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"};
-    private static Scanner scan;
-    public static SecureRandom srand;
-    private Villain challenger;
-    private String lastMove;
+    private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 1; // Important Variables for Player
+    private boolean potionUsed = false; // Check if potion was used this turn
+    final public static String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
+    private static Scanner scan; // Scanner
+    public static SecureRandom srand; // Secure RNG
+    private Villain challenger; // Current Challenger
+    private String lastMove = "none"; //Last move to check for blocks and counters
 
     public Game()
     {
@@ -105,7 +105,7 @@ public class Game
         input();
     }
 
-    public void chooseAttack()
+    public void chooseAttack() // User chooses attack and appropriate function is called
     {
         printHP();
         out.println("\nTypes of Attacks:");
@@ -136,7 +136,52 @@ public class Game
         }
     }
 
-    public void basic()
+    public void choosePotion() // User chooses potion and appropriate function is called
+    {
+        printHP(challenger.getHp(),hp);
+        out.println("\nTypes of Potions: ");
+        printArray(potionMenu);
+        String choice = scan.nextLine().toLowerCase();
+        lastMove = "potion";
+        if(potionUsed)
+        {
+            out.println("You already used a potion this turn!");
+            sDelay(2);
+            input();
+            return;
+        }
+        else if(numPotions <= 0) 
+        {
+            out.println("You have no more potions left");
+            sDelay(2);
+            input();
+            return;
+        }
+        else if(choice.contains("atk") || choice.charAt(0) == 'a') 
+        {
+            atkPotion();
+            return;
+        }
+        else if(choice.contains("defense") || choice.charAt(0) == 'd')
+        {
+            dPotion();
+            return;
+        }
+        else if(choice.contains("heal") || choice.charAt(0) == 'h')
+        {
+            hpPotion();
+            return;
+        }
+        else if(choice.contains("exit") || choice.charAt(0) == 'e') 
+        {
+            input(); 
+            return;
+        }
+        out.println("Please enter a valid input");
+        choosePotion();
+    }
+
+    public void basic() // Basic Attack
     {
         int rand = srand.nextInt(10);
         int dmg = rand == 1 ? atk+critDmg:atk;
@@ -177,7 +222,7 @@ public class Game
         sDelay(1);
     }
 
-    public void slap()
+    public void slap() // Slap Attack Logic
     {
         if(turn % 2 == 0)
         {
@@ -187,7 +232,6 @@ public class Game
             challenger.setHp(challenger.getHp()-1);
             challenger.setAtk(challenger.getAtk()-5);
             turn++;
-            sDelay(2);
         }
         else
         {
@@ -196,86 +240,83 @@ public class Game
             atk-=5;
             turn++;
         }
+        sDelay(2);
     }
 
-    public static void sDelay(int seconds)
+    public void dPotion() // Defense Potion Logic
+    {
+        int nextRand = 1-srand.nextInt(20)/100;
+        potionAnimation("DEF");
+        if(turn%2==0)
+        {
+            potionUsed = true;
+            numPotions--;
+            def += challenger.getAtk()*nextRand;
+            printHP();
+            out.println("\nYou used a defense potion. Your defense is now " + def);
+        }
+        else
+        {
+            challenger.setDef(challenger.getDef()+nextRand);
+            printHP();
+            out.println("\n" + challenger.getName() + " used a defense potion. Their defense is now " + challenger.getDef());
+        }
+        sDelay(2);
+    }
+
+    public void atkPotion() // Attack Potion Logic
+    {
+        int nextRand = srand.nextInt(95)+5,originalAtk = turn%2 == 0 ? atk:challenger.getAtk();
+        potionAnimation("ATK");
+        if(turn % 2 == 0)
+        {
+            potionUsed = true;
+            numPotions--;
+            atk += nextRand;
+            printHP();
+            out.println("\nYou used an Attack Potion and your attack increased by " + (atk-originalAtk) + " damage");
+        }
+        else
+        {
+            challenger.setAtk(challenger.getAtk()+nextRand);
+            printHP();
+            out.println("\n" + challenger.getName() + " used an Attack Potion. Their Attack increased by " + (challenger.getAtk()-originalAtk) + " damage");
+        }
+        sDelay(2);
+    }
+
+    public void hpPotion() // Health Potion
+    {
+        int nextRand = srand.nextInt(10)/5+1, originalHP = turn % 2 == 0 ? hp : challenger.getHp();
+        potionAnimation("HP");
+        if(turn%2==0)
+        {
+            potionUsed = true;
+            numPotions--;
+            hp *= nextRand;
+            out.println("\nYou used a healing potion and gained " + (hp-originalHP) + " health");
+        }
+        else
+        {
+            challenger.setHp(challenger.getHp()*nextRand);
+            out.println("\n" + challenger.getName() + " used a healing potion and gained " + (hp-originalHP) + " health");
+        }
+        sDelay(2);
+    }
+
+    public static void sDelay(int seconds) // Create a delay in Seconds
     {
         try{SECONDS.sleep(seconds);}
         catch(Exception InterruptedException){out.println("Delay cancelled");}
     }
 
-    private void mDelay(int milliseconds)
+    private void mDelay(int milliseconds) // Create a delay in MS
     {
         try{MILLISECONDS.sleep(milliseconds);}
         catch(Exception InterruptedException){out.println("Cancelled");}
     }
 
-    public void choosePotion()
-    {
-        printHP(challenger.getHp(),hp);
-        out.println("\nTypes of Potions: ");
-        printArray(potionMenu);
-        String choice = scan.nextLine().toLowerCase();
-        lastMove = "potion";
-        if(potionUsed)
-        {
-            out.println("You already used a potion this turn!");
-            sDelay(2);
-            input();
-            return;
-        }
-        else if(numPotions <= 0) 
-        {
-            out.println("You have no more potions left");
-            sDelay(2);
-            input();
-            return;
-        }
-        else if(choice.contains("atk") || choice.charAt(0) == 'a') 
-        {
-            int nextRand = srand.nextInt(95)+5;
-            potionUsed = true;
-            numPotions--;
-            atk += nextRand;
-            turn++;
-            atkDmgAnimation();
-            printHP();
-            out.println("\nYou used an attack Potion. Your attack is now " + atk + " damage");
-            sDelay(2);
-            return;
-        }
-        else if(choice.contains("defense") || choice.charAt(0) == 'd')
-        {
-            int nextRand = 1-srand.nextInt(20)/100;
-            potionUsed = true;
-            numPotions--;
-            def += challenger.getAtk()*nextRand;
-            turn++;
-            out.println("\nYou used a defense potion. Your defense is now " + def);
-            sDelay(2);
-            return;
-        }
-        else if(choice.contains("heal") || choice.charAt(0) == 'h')
-        {
-            int nextRand = srand.nextInt(10);
-            potionUsed = true;
-            numPotions--;
-            hp *= nextRand;
-            turn++;
-            out.println("\nYou used a healing potion. Your health is now " + hp);
-            sDelay(2);
-            return;
-        }
-        else if(choice.contains("exit") || choice.charAt(0) == 'e') 
-        {
-            input(); 
-            return;
-        }
-        out.println("Please enter a valid input");
-        choosePotion();
-    }
-
-    public void printWin()
+    public void printWin() // Print Player WIN
     {
         clearScreen();
         out.println("*       *   *****       *       *      *             *   ***********   *        *");
@@ -288,7 +329,7 @@ public class Game
         out.println("    *       *****         *****            *     *       ***********   *        *");
     }
 
-    public static void printLoss()
+    public static void printLoss() // Print Player Loss
     {
         clearScreen();
         out.println("*       *   *****       *       *      *             *****      *******   ******");
@@ -301,7 +342,7 @@ public class Game
         out.println("    *       *****         *****        *********     *****     *******    ******");
     }
 
-    public String winner()
+    public String winner() // Return winner
     {
         if(challenger.getHp() <= 0) 
         {
@@ -319,7 +360,7 @@ public class Game
         else return "n";
     }
 
-    public void playAgain()
+    public void playAgain() // Play Again Function
     {
         clearScreen();
         out.println("Do you want to play again?(Y/n)");
@@ -337,90 +378,53 @@ public class Game
         playAgain();
     }
 
-    public void atkDmgAnimation()
+    public void potionAnimation(String type) // Animates Potion Effects
     {
+        String body = turn % 2 == 0 ? "!T!  <-- YOU" : "!T!  <-- OPP";
         printHP();
         out.println("   ");
         out.println("   ");
         out.println("   ");
         out.println(" O ");
-        out.println("!T!");
+        out.println(body);
         out.println(" |");
         out.println("/ \\ ");
         mDelay(400);
         printHP();
         out.println("   ");
         out.println("   ");
-        out.println("ATK++");
+        out.println(type + "++");
         out.println(" O ");
-        out.println("!T!");
+        out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
         mDelay(400);
         printHP();
         out.println("   ");
-        out.println("ATK++");
+        out.println(type + "++");
         out.println("   ");
         out.println(" O ");
-        out.println("!T!");
+        out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
         mDelay(400);
         printHP();
-        out.println("ATK++");
+        out.println(type + "++");
         out.println("   ");
         out.println("   ");
         out.println(" O ");
-        out.println("!T!");
+        out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
+        mDelay(400);
     }
 
-    public void defAnimation()
-    {
-        printHP();
-        out.println("   ");
-        out.println("   ");
-        out.println("   ");
-        out.println(" O ");
-        out.println("!T!");
-        out.println(" |");
-        out.println("/ \\ ");
-        mDelay(400);
-        printHP();
-        out.println("   ");
-        out.println("   ");
-        out.println("DEF++");
-        out.println(" O ");
-        out.println("!T!");
-        out.println(" | ");
-        out.println("/ \\ ");
-        mDelay(400);
-        printHP();
-        out.println("   ");
-        out.println("DEF++");
-        out.println("   ");
-        out.println(" O ");
-        out.println("!T!");
-        out.println(" | ");
-        out.println("/ \\ ");
-        mDelay(400);
-        printHP();
-        out.println("DEF++");
-        out.println("   ");
-        out.println("   ");
-        out.println(" O ");
-        out.println("!T!");
-        out.println(" | ");
-        out.println("/ \\ ");
-    }
+    private void printArray(String[] arr) {out.println(Arrays.toString(arr));} // Print given Array to String
 
-    private void printArray(String[] arr) {out.println(Arrays.toString(arr));}
-
-    public static void clearScreen()
+    public static void clearScreen() // Clear Screen
     {
-        out.print("\033[H\033[2J");
-        out.flush();
-        out.print("\u001b[H");
+        out.print("\033[H\033[2J"); // Clear Screen
+        out.flush(); // Flush Screen / Memory
+        out.print("\u001b[H"); // Set cursor to top
     }
 }

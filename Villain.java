@@ -1,7 +1,7 @@
 public class Villain 
 {
     private int hp, atk, def;
-    private String lastMove, name;
+    private String lastMove = "none", name;
 
     // Constructor sets value for hp, atk dmg, name, and def
     public Villain(int hp,int atk,int def)
