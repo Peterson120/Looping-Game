@@ -76,8 +76,7 @@ public class Game
         printPlayerHP(hp);
     }
 
-    // Get user input for type of Attack
-    public void input()
+    public void input() // Get user input for type of Attack
     {
         printHP();
         out.println("\nPossible Moves:");
