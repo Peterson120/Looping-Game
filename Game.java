@@ -6,7 +6,6 @@ import java.security.*;
 /*
 Ideas
 Counter Attack 50% chance + crit if opponent attacks on next turn
-Regular attack 100% chance + 10% crit
 Block up to 100%
 Limit num of potions and one potion per turn
 */
@@ -183,12 +182,20 @@ public class Game
 
     public void basic() // Basic Attack
     {
-        int rand = srand.nextInt(10);
-        int dmg = rand == 1 ? atk+critDmg:atk;
-        int cOldHp = challenger.getHp();
-        int pOldHp = hp;
+        miss();
+        int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
+        int dmg = critChance == 1 ? atk+critDmg:atk; // Determine amount of Damage
+        int cOldHp = challenger.getHp(); // Store computer hp before damage
+        int pOldHp = hp; // Store player hp before damage
         if(turn % 2 == 0)
         {
+            if(challenger.getLastMove().equals("block"))
+            {
+                double blockAmount = block();
+                dmg *= blockAmount;
+                out.println("\n" + challenger.getName() + " blocked " + blockAmount*100 + "% of your attack");
+                sDelay(2);
+            }
             potionUsed = false;
             challenger.setHp(challenger.getHp()-dmg);
             out.println("You did " + dmg + " damage!");
@@ -204,7 +211,15 @@ public class Game
                 mDelay(200);
             }
         }
-        else{
+        else
+        {
+            if(lastMove.equals("block"))
+            {
+                double blockAmount = block();
+                dmg *= blockAmount;
+                out.println("You blocked " + blockAmount*100 + "% of" + challenger.getName() + "'s attack");
+                sDelay(2);
+            }
             hp-=dmg;
             challenger.setLastMove("basic");
             out.println(challenger.getName() + " used a basic attack a did " + dmg + " damage!");
@@ -220,6 +235,29 @@ public class Game
             }
         }
         sDelay(1);
+    }
+
+    public void miss() // Create a chance at missing attack
+    {
+        int missChance = srand.nextInt(100); // Determine Random Miss Chance Number
+        if(missChance == 1) // 1% chance of missing attack
+        {
+            clearScreen();
+            printHP();
+            switch(turn%2)
+            {
+                case 0:
+                    out.println("You Missed");
+                    turn++;
+                    sDelay(2);
+                    challenger.turn();
+                case 1:
+                    out.println(challenger.getName() + " Missed");
+                    turn++;
+                    sDelay(2);
+                    input();
+            }
+        }
     }
 
     public void slap() // Slap Attack Logic
@@ -241,6 +279,11 @@ public class Game
             turn++;
         }
         sDelay(2);
+    }
+
+    private double block() // Return a random block percentage
+    {
+        return (100 - (srand.nextInt(75) + 25))/100;
     }
 
     public void dPotion() // Defense Potion Logic

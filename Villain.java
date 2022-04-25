@@ -1,7 +1,7 @@
 public class Villain 
 {
-    private int hp, atk, def;
-    private String lastMove = "none", name;
+    private int hp, atk, def; // Challenger's hp, atk, and def
+    private String lastMove = "none", name; // Last Move and name
 
     // Constructor sets value for hp, atk dmg, name, and def
     public Villain(int hp,int atk,int def)
@@ -28,7 +28,7 @@ public class Villain
     public void setLastMove(String move){lastMove = move;}
     public String getLastMove(){return lastMove;}
 
-    public void turn()
+    public void turn() // Challenger Take Turn Method
     {
         int rand = Game.srand.nextInt(10);
         if(rand > 5) //attack
