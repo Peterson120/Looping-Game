@@ -50,7 +50,7 @@ public class Game
         {
             out.println("BOSS LEVEL");
             challenger = new Boss(); // Create Boss if Only One Challenger Remains
-            challenger.setBoss(playerLevel*(atk+def+hp));
+            challenger.setBoss(2*playerLevel*(atk+def+hp));
             sDelay(2);
         }
         else if(numOppsLeft == 1) 
