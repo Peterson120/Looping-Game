@@ -86,12 +86,8 @@ public class Main
     private static void rules() // Print rules/tips
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 5 potions to start and you gain 3 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks");
-        Game.sDelay(5); // Wait 5 Seconds before allowing user to input
-        out.println("\nType OK to continue");
-        String user = scan.nextLine().toLowerCase(); // Get user input
-        if(user.contains("ok")) return; // Check is input contains ok
-        rules(); // Otherwise call on itself
+        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 5 potions to start and you gain 3 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks\n\nPress Enter to Continue");
+        scan.nextLine(); // Wait for user input
     }
 
     public static void play(String name) // Main Game
