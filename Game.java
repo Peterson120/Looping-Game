@@ -202,10 +202,10 @@ public class Game
             return;
         }
         out.println("Please enter a valid input");
-        choosePotion();
+        choosePotion(); // If input does not match criteria rerun function
     }
 
-    public void basic() // Basic Attack
+    public void basic() // Basic Attack need to add counter attack
     {
         miss(); // Check if attack missed
         int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
@@ -325,19 +325,19 @@ public class Game
 
     public void dPotion() // Defense Potion Logic
     {
-        int nextRand = 1-srand.nextInt(20)/100;
-        potionAnimation(challenger.getHp(),hp,"DEF");
-        if(turn%2==0)
+        double nextRand = 1.1+srand.nextInt(20)/100; // Get random defense percentage starting at 10% to a max of 30%
+        potionAnimation(challenger.getHp(),hp,"DEF"); // Animate def increase
+        if(turn%2==0) // User turn
         {
-            numPotions--;
-            def += challenger.getAtk()*nextRand;
+            numPotions--; // Decrease amount of potions
+            def *= nextRand; // Apply Defense increase
             printHP();
             out.println("\nYou used a defense potion. Your defense is now " + def);
         }
-        else
+        else // Challenger turn
         {
-            challenger.setPotions(challenger.getPotions()-1);
-            challenger.setDef(challenger.getDef()+nextRand);
+            challenger.setPotions(challenger.getPotions()-1); // Decrease computer potions left
+            challenger.setDef((int)(challenger.getDef()*nextRand)); // Set Computer Defense
             printHP();
             out.println("\n" + challenger.getName() + " used a defense potion. Their defense is now " + challenger.getDef());
         }
@@ -346,19 +346,20 @@ public class Game
 
     public void atkPotion() // Attack Potion Logic
     {
-        int nextRand = srand.nextInt(95)+5,originalAtk = turn%2 == 0 ? atk:challenger.getAtk();
+        double nextRand = srand.nextInt(25)/100+1.05; // Get random percentage starting at 5% up to 30%
+        int originalAtk = turn%2 == 0 ? atk:challenger.getAtk(); //Determine original Attack Amount
         potionAnimation(challenger.getHp(),hp,"ATK");
         if(turn % 2 == 0)
         {
-            numPotions--;
-            atk += nextRand;
+            numPotions--; // Decrement Num of Potions
+            atk *= nextRand; // Apply Attack
             printHP();
             out.println("\nYou used an Attack Potion and your attack increased by " + (atk-originalAtk) + " damage");
         }
         else
         {
-            challenger.setPotions(challenger.getPotions()-1);
-            challenger.setAtk(challenger.getAtk()+nextRand);
+            challenger.setPotions(challenger.getPotions()-1); // Decrease computer potions
+            challenger.setAtk((int)(challenger.getAtk()*nextRand)); // Set computer attack
             printHP();
             out.println("\n" + challenger.getName() + " used an Attack Potion. Their Attack increased by " + (challenger.getAtk()-originalAtk) + " damage");
         }
@@ -367,22 +368,22 @@ public class Game
 
     public void hpPotion() // Health Potion
     {
-        double increase = srand.nextInt(100)/100+0.25;
+        double increase = srand.nextInt(60)/100+1.15; // Random percentage of health to gain back starting at 15% up to 75%
         int cOriginal=challenger.getHp(),pOriginal=hp;
         if(turn%2==0)
         {
-            numPotions--;
-            hp += pOriginal*increase;
+            numPotions--; // Decrement potions
+            hp *= increase; // Apply percentage to hp
             printHP();
-            potionAnimation(cOriginal,pOriginal,"HP");
+            potionAnimation(cOriginal,pOriginal,"HP"); // Animate
             out.println("\nYou used a healing potion and gained " + (hp-pOriginal) + " health");
         }
         else
         {
-            challenger.setPotions(challenger.getPotions()-1);
-            challenger.setHp((int)(cOriginal+challenger.getHp()*increase));
+            challenger.setPotions(challenger.getPotions()-1); // Decrease Computer Potions
+            challenger.setHp((int)(challenger.getHp()*increase)); // Set computer hp
             printHP();
-            potionAnimation(cOriginal,pOriginal,"HP");
+            potionAnimation(cOriginal,pOriginal,"HP"); // Animate Health bar
             out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-cOriginal) + " health");
         }
         sDelay(2);
