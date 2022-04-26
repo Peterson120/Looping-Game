@@ -4,9 +4,10 @@ import java.util.*;
 import java.security.*;
 
 /*
+Password for Dungeon is "Secret Word"
 Ideas
 Counter Attack 50% chance + crit if opponent attacks on next turn
-block dmg
+slap animation and hp gain animation
 user name
 */
 
@@ -199,17 +200,18 @@ public class Game
         miss();
         int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
         int dmg = critChance == 1 ? atk+critDmg:atk; // Determine amount of Damage
-        int cOldHp = challenger.getHp(); // Store computer hp before damage
-        int pOldHp = hp; // Store player hp before damage
+        int cOriginal = challenger.getHp(); // Store computer hp before damage
+        int pOriginal = hp; // Store player hp before damage
         if(turn % 2 == 0)
         {
             dmg -= challenger.getDef();
             dmg = dmg < 0 ? 0:dmg;
             if(challenger.getLastMove().equals("block"))
             {
-                double blockAmount = block();
-                dmg *= blockAmount/100;
-                out.println("\n" + challenger.getName() + " blocked " + blockAmount + "% of your attack");
+                int blockAmount = block();
+                dmg *= blockAmount;
+                dmg/=100;
+                out.println("\n" + challenger.getName() + " blocked " + (100-blockAmount) + "% of your attack");
                 sDelay(2);
             }
             potionUsed = false;
@@ -217,15 +219,7 @@ public class Game
             out.println("You did " + dmg + " damage!");
             lastMove = "basic";
             turn++;
-            for(int i = 0; i < 3; i++) 
-            {
-                printHP(cOldHp,pOldHp);
-                out.println("\nYou did " + dmg + " damage!");
-                mDelay(200);
-                printHP();
-                out.println("\nYou did " + dmg + " damage!");
-                mDelay(200);
-            }
+            blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!");
         }
         else
         {
@@ -233,26 +227,32 @@ public class Game
             dmg = dmg < 0 ? 0:dmg;
             if(lastMove.equals("block"))
             {
-                double blockAmount = block();
-                dmg *= blockAmount/100;
-                out.println("\nYou blocked " + blockAmount + "% of " + challenger.getName() + "'s attack");
+                int blockAmount = block();
+                dmg *= blockAmount;
+                dmg /= 100;
+                out.println("\nYou blocked " + (100 - blockAmount) + "% of " + challenger.getName() + "'s attack");
                 sDelay(2);
             }
             hp-=dmg;
             challenger.setLastMove("basic");
             out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
             turn++;
-            for(int i = 0; i < 3; i++) 
-            {
-                printHP(cOldHp,pOldHp);
-                out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
-                mDelay(200);
-                printHP();
-                out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
-                mDelay(200);
-            }
+            blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
         }
         sDelay(1);
+    }
+
+    private void blink(int cOriginal, int pOriginal, String message)
+    {
+        for(int i = 0; i < 3; i++) 
+        {
+            printHP(cOriginal,pOriginal);
+            out.println(message);
+            mDelay(200);
+            printHP();
+            out.println(message);
+            mDelay(200);
+        }
     }
 
     public void miss() // Create a chance at missing attack
@@ -280,34 +280,37 @@ public class Game
 
     public void slap() // Slap Attack Logic
     {
+        int cOriginal = challenger.getHp(),pOriginal=hp;
         if(turn % 2 == 0)
         {
             potionUsed = false;
             out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
             lastMove = "slap";
-            challenger.setHp(challenger.getHp()-1);
-            challenger.setAtk(challenger.getAtk()-5);
+            challenger.setHp(challenger.getHp()-challenger.getHp()/10);
+            challenger.setAtk(challenger.getAtk()-challenger.getAtk()/20);
             turn++;
+            blink(cOriginal,pOriginal,"\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
         }
         else
         {
             out.println("\nYou got slapped by " + challenger.getName() + "!");
-            hp--;
-            atk-=5;
+            hp-=hp/10;
+            atk-=atk/20;
             turn++;
+            blink(cOriginal,pOriginal,"\nYou got slapped by " + challenger.getName() + "!");
         }
         sDelay(2);
     }
 
     private int block() // Return a random block percentage
     {
-        return srand.nextInt(75) + 25;
+        return 100 - (srand.nextInt(75) + 25);
     }
 
     public void dPotion() // Defense Potion Logic
     {
         int nextRand = 1-srand.nextInt(20)/100;
-        potionAnimation("DEF");
+        potionAnimation(challenger.getHp(),hp,"DEF");
         if(turn%2==0)
         {
             potionUsed = true;
@@ -328,7 +331,7 @@ public class Game
     public void atkPotion() // Attack Potion Logic
     {
         int nextRand = srand.nextInt(95)+5,originalAtk = turn%2 == 0 ? atk:challenger.getAtk();
-        potionAnimation("ATK");
+        potionAnimation(challenger.getHp(),hp,"ATK");
         if(turn % 2 == 0)
         {
             potionUsed = true;
@@ -348,20 +351,20 @@ public class Game
 
     public void hpPotion() // Health Potion
     {
-        double increase = srand.nextInt(2)+1.5;
-        int originalHP = turn % 2 == 0 ? hp : challenger.getHp();
-        potionAnimation("HP");
+        double increase = srand.nextInt(2)+0.5;
+        int cOriginal=challenger.getHp(),pOriginal=hp;
+        potionAnimation(cOriginal,pOriginal,"HP");
         if(turn%2==0)
         {
             potionUsed = true;
             numPotions--;
             hp *= increase;
-            out.println("\nYou used a healing potion and gained " + (hp-originalHP) + " health");
+            out.println("\nYou used a healing potion and gained " + (hp-pOriginal) + " health");
         }
         else
         {
             challenger.setHp(challenger.getHp()*((int)increase));
-            out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-originalHP) + " health");
+            out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-cOriginal) + " health");
         }
         sDelay(2);
     }
@@ -369,7 +372,7 @@ public class Game
     public static void sDelay(int seconds) // Create a delay in Seconds
     {
         try{SECONDS.sleep(seconds);}
-        catch(Exception InterruptedException){out.println("Delay cancelled");}
+        catch(Exception InterruptedException){out.println("Cancelled");}
     }
 
     private void mDelay(int milliseconds) // Create a delay in MS
@@ -443,10 +446,10 @@ public class Game
         playAgain();
     }
 
-    public void potionAnimation(String type) // Animates Potion Effects
+    public void potionAnimation(int cOriginal,int pOriginal,String type) // Animates Potion Effects
     {
         String body = turn % 2 == 0 ? "!T!  <-- YOU" : "!T!  <-- OPP";
-        printHP();
+        printHP(cOriginal,pOriginal);
         out.println("   ");
         out.println("   ");
         out.println("   ");
@@ -464,7 +467,7 @@ public class Game
         out.println(" | ");
         out.println("/ \\ ");
         mDelay(400);
-        printHP();
+        printHP(cOriginal,pOriginal);
         out.println("   ");
         out.println(type + "++");
         out.println("   ");

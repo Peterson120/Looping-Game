@@ -1,5 +1,3 @@
-import javax.lang.model.util.ElementScanner6;
-
 public class Villain 
 {
     private int hp, atk, def; // Challenger's hp, atk, and def
