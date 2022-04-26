@@ -1,4 +1,3 @@
-import java.security.*;
 public class Names
 {
     // Large list of names
@@ -6,8 +5,7 @@ public class Names
 
     public String getName() // Choose a name from the list
     {
-        SecureRandom srand = new SecureRandom();
-        int rand = srand.nextInt(names.length);
+        int rand = Game.srand.nextInt(names.length);
         return names[rand];
     }
 }

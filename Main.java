@@ -3,9 +3,12 @@ import java.util.*;
 
 /*
 Combat game
-Hint for Secret Word
-    Understand what the functions do
-    Look at the addValues() function
+Hints for Secret Word
+    1. Understand what the functions do
+    2. Look at the addValues() function and secretWord() function
+    3. The letters are stored as ASCII values
+    4. Try reverse engineering the function addValues() use a bit of code to help you
+    5. The answer is at the top of the Game class
 */
 public class Main
 {
@@ -83,7 +86,7 @@ public class Main
     private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nBlocking will block up to 80% damage\nYou lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent\nYou have 5 potions to start and you gain 3 for each opponent that you beat\n\nPress Enter to Continue");
+        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nYou lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent\nYou have 5 potions to start and you gain 3 for each opponent that you beat\n\nPress Enter to Continue");
         scan.nextLine(); // Wait for user input
     }
 

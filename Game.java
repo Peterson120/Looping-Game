@@ -5,11 +5,11 @@ import java.security.*;
 
 /*
 Password for Dungeon is "Secret Word"
+
 Ideas
-Player hp bars
+better hp bars
 animation
-Descriptions for potions and conuter attack
-AI potion
+Descriptions for potions and counter attack
 Improve tokens no less than 1 and more informative about errors
 type i for information of current Screen
 s for stats
@@ -21,9 +21,8 @@ public class Game
     final public static String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
     public static Scanner scan = new Scanner(System.in);    // Scanner
     public static SecureRandom srand = new SecureRandom();  // Secure RNG
-    private Player challenger;            // Current Challenger
+    private Player challenger; // Current Challenger
     private Player player;
-    private String lastMove = "none"; // Last move to check for blocks and counters and user's name
 
     public Game(Player player) // Game Constructor
     {
@@ -40,7 +39,6 @@ public class Game
     }  
 
     // Getters and Setters
-    public String getMove() {return lastMove;}
     public int getTurn() {return turn;}
     public void setTurn(int turn) {this.turn=turn;}
     public Player getVillain() {return challenger;}
@@ -113,7 +111,7 @@ public class Game
         }
         else if(input.charAt(0) == 'b' || input.contains("block")) // Block
         {
-            lastMove = "block"; // Set move to block
+            player.setLastMove("block"); // Set move to block
             turn++; // Increase turn
             return;
         }
@@ -145,7 +143,8 @@ public class Game
         }
         else if(choice.contains("counter")) // Counter Attack
         {
-            lastMove = "counter"; // Set last Move to counter attack
+            player.setLastMove("counter"); // Set last Move to counter attack
+            out.println("You used counter!");
             turn++; // Increment turn
             return;
         }
@@ -168,7 +167,7 @@ public class Game
         out.println("\nTypes of Potions: ");
         printArray(potionMenu); // List potions
         String choice = scan.nextLine().toLowerCase(); // Get user Input
-        if(lastMove.equals("potion")) // Check that potion was not already played this turn
+        if(player.getLastMove().equals("potion")) // Check that potion was not already played this turn
         {
             out.println("You already used a potion this turn!");
             sDelay(2);
@@ -184,19 +183,19 @@ public class Game
         }
         else if(choice.contains("atk") || choice.charAt(0) == 'a') // ATK potion
         {
-            lastMove = "potion";
+            player.setLastMove("potion");
             atkPotion(); // Go to atk potion function
             return;
         }
         else if(choice.contains("defense") || choice.charAt(0) == 'd') // Defense Potion
         {
-            lastMove = "potion";
+            player.setLastMove("potion");
             dPotion(); // Go to def potion function
             return;
         }
         else if(choice.contains("heal") || choice.charAt(0) == 'h') // Healing
         {
-            lastMove = "potion";
+            player.setLastMove("potion");
             hpPotion();
             return;
         }
@@ -222,7 +221,7 @@ public class Game
             dmg = checkSpecial(turn,dmg);
             challenger.setHp(challenger.getHp()-dmg); // Set hp
             out.println("You did " + dmg + " damage!");
-            lastMove = "basic"; // Set Last move
+            player.setLastMove("basic");; // Set Last move
             turn++; // Increment turn
             blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!"); // Blink Health Bar Animation
         }
@@ -238,7 +237,8 @@ public class Game
             turn++;
             blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack and did " + dmg + " damage!");
         }
-        sDelay(1);
+        out.println("\nPress Enter to continue");
+        scan.nextLine();
     }
 
     private int checkSpecial(int turn, int dmg)
@@ -265,14 +265,14 @@ public class Game
         }
         else
         {
-            if(lastMove.equals("block"))
+            if(player.getLastMove().equals("block"))
             {
                 int blockAmount = block();
                 dmg *= blockAmount;
                 dmg /= 100;
                 out.println("\nYou blocked " + (100 - blockAmount) + "% of " + challenger.getName() + "'s attack");
             }
-            else if(lastMove.equals("counter") && counterChance == 1) // If your last move was counter attack
+            else if(player.getLastMove().equals("counter") && counterChance == 1) // If your last move was counter attack
             {
                 double counterAmount = player.getAtk()*3/2;
                 challenger.setHp((int)(challenger.getHp()-counterAmount));
@@ -283,7 +283,7 @@ public class Game
         return dmg;
     }
 
-    private void blink(int cOriginal, int pOriginal, String message) // Creates a blink effect
+    private void blink(int cOriginal, int pOriginal, String message) // Creates a blink effect on health
     {
         for(int i = 0; i < 3; i++) // Loop x amount of times
         {
@@ -308,12 +308,14 @@ public class Game
                 case 0:
                     out.println("\nYou Missed");
                     turn++;
-                    sDelay(2);
+                    out.println("\nPress Enter to continue");
+                    scan.nextLine();
                     challenger.turn();
                 case 1: // Challenger Turn
                     out.println("\n" + challenger.getName() + " Missed");
                     turn++;
-                    sDelay(2);
+                    out.println("\nPress Enter to continue");
+                    scan.nextLine();
                     input();
             }
         }
@@ -325,7 +327,7 @@ public class Game
         if(turn % 2 == 0) // Player turn
         {
             out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
-            lastMove = "slap"; // Set last move
+            player.setLastMove("slap");; // Set last move
             int hpAmount = challenger.getHp()/10-challenger.getDef(); // Helper variable
             hpAmount = hpAmount < 0 ? 0 : hpAmount; // Determine if variable is negative
             int atkAmount = challenger.getAtk()/20+challenger.getDef()/20; // Helper Variable
@@ -347,6 +349,7 @@ public class Game
             turn++;
             blink(cOriginal,pOriginal,"\nYou got slapped by " + challenger.getName() + "!");
         }
+        out.println("\nPress Enter to continue");
         scan.nextLine();
     }
 
@@ -373,6 +376,7 @@ public class Game
             printHP();
             out.println("\n" + challenger.getName() + " used a defense potion. Their defense is now " + challenger.getDef());
         }
+        out.println("\nPress Enter to continue");
         scan.nextLine();
     }
 
@@ -395,7 +399,8 @@ public class Game
             printHP();
             out.println("\n" + challenger.getName() + " used an Attack Potion. Their Attack increased by " + (challenger.getAtk()-originalAtk) + " damage");
         }
-        sDelay(2);
+        out.println("\nPress Enter to continue");
+        scan.nextLine();
     }
 
     public void hpPotion() // Health Potion
@@ -418,7 +423,8 @@ public class Game
             potionAnimation(cOriginal,pOriginal,"HP"); // Animate Health bar
             out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-cOriginal) + " health");
         }
-        sDelay(2);
+        out.println("\nPress Enter to continue");
+        scan.nextLine();
     }
 
     public static void sDelay(int seconds) // Create a delay in Seconds

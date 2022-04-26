@@ -5,10 +5,13 @@ public class Player
     private String name,lastMove;
     private Map<String, Integer> values;
 
-    public Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def if it is a villain class
+    public Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def if it is a villain
     {
         Names randName = new Names(); // New name instance
         name = randName.getName(); // Set name
+        values = new HashMap<String,Integer>(); // Initialize HashMap
+        setPotions(8); // Set number of potions
+        setLastMove(""); // Initialize LastMove in Hash
         setMap(hp, atk, def);
     }
 
@@ -17,8 +20,9 @@ public class Player
         values = new HashMap<String,Integer>();
         chooseName();
         chooseValues();
-        values.put("level",1);
-        values.put("potions",5);
+        setLastMove("");
+        setLevel(1);
+        setPotions(5);
     }
 
     //Set map Values
@@ -26,7 +30,6 @@ public class Player
         values.put("hp",hp);
         values.put("atk",atk);
         values.put("def",def);
-        values.put("crit",values.get("atk")/3);
     }
     
     // Getters and Setters
@@ -101,10 +104,10 @@ public class Player
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!");
         out.println("\nEnter a name to begin: ");
-        String user = Game.scan.nextLine(); // Get name
-        if(user.length() <= 0 || user.length() > 10) chooseName();
-        String letter = (String.valueOf(user.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
-        user = letter + user.substring(1); // Set name to upppercase letter and the rest of the name
+        String name = Game.scan.nextLine(); // Get name
+        if(name.length() <= 0 || name.length() > 10) chooseName();
+        String letter = (String.valueOf(name.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
+        this.name = letter + name.substring(1); // Set name to upppercase letter and the rest of the name
     }
     
     private void chooseValues()
@@ -114,7 +117,7 @@ public class Player
         values.put("defTok",3);
         String selection = ""; // User input
         Game.clearScreen();
-        out.println("You have 12 tokens in total. Each token represents an increase by 500 Health, 50 Attack, or 30 Defense\nEnter (+/-)+(Integer) to change the number of tokens in the category\n\nPress Enter");
+        out.println("You have 12 tokens in total. Each token represents an increase by 500 Health, 50 Attack, or 30 Defense\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit\n\nPress Enter");
         Game.scan.nextLine();
         do
         {
@@ -127,11 +130,10 @@ public class Player
             if(selection.length()<=0) 
             {
                 out.println("Please enter an input");
-                selection = "";
             }
             else if(selection.charAt(0) == 'e')
             {
-                setMap(values.get("hpTok")*500,values.get("atkTok")*50,values.get("defTok")*30);
+                setMap((values.get("hpTok")+1)*500,(values.get("atkTok")+1)*50,(values.get("defTok")+1)*30);
                 values.remove("hpTok");
                 values.remove("atkTok");
                 values.remove("defTok");
