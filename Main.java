@@ -94,17 +94,16 @@ public class Main
         rules(); // Otherwise call on itself
     }
 
-    public static void play(String name)
+    public static void play(String name) // Main Game
     {
-        game = new Game(name);
-        while(game.winner().equals("n"))
+        game = new Game(name); // Crea game instance
+        while(game.winner().equals("n")) // Main game loop
         {
             if(game.getTurn()%2==0) game.input();
             else game.getVillain().turn();
         }
-        String win = game.winner();
-        if(win.equals("player")) game.printWin();
-        else Game.printLoss();
-        game.playAgain();
+        if(game.winner().equals("player")) game.printWin(); // Get winner and prnt win if player
+        else Game.printLoss(); // Elise print lose
+        game.playAgain(); // Ask if user wants to play again
     }
 }
