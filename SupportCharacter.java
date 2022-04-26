@@ -1,4 +1,4 @@
-public class SupportCharacter extends Villain
+public class SupportCharacter extends Player
 {
     public SupportCharacter(int hp, int atk, int def)
     {

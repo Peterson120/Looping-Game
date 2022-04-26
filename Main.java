@@ -5,6 +5,7 @@ import java.util.*;
 Combat game
 Hint for Secret Word
     Understand what the functions do
+    Look at the addValues() function
 */
 public class Main
 {
@@ -17,20 +18,16 @@ public class Main
         minigame(); // Create a little minigame
         out.println("\nCongratulations, You have advanced onto the dungeon");
         Game.sDelay(2);
-        setup(); // Setup functoin
+        setup(); // Setup function
     }
 
     private static void setup() // Print intro to main game
     {
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!\n");
-        out.println("Enter a name to begin: ");
-        String user = scan.nextLine(); // Get name
-        if(user.length() <= 0 || user.length() > 10) setup();
-        String letter = (String.valueOf(user.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
-        user = letter + user.substring(1); // Set name to upppercase letter and the rest of the name
-        rules(); // Go to Rules screen
-        play(user); // Main game loop
+
+        text(); // Go to Rules screen
+        play(); // Main game loop
     }
 
     private static void minigame() // Minigame
@@ -83,16 +80,17 @@ public class Main
         return false;
     }
 
-    private static void rules() // Print rules/tips
+    private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 5 potions to start and you gain 3 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks\n\nPress Enter to Continue");
+        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nBlocking will block up to 80% damage\nYou lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent\nYou have 5 potions to start and you gain 3 for each opponent that you beat\n\nPress Enter to Continue");
         scan.nextLine(); // Wait for user input
     }
 
-    public static void play(String name) // Main Game
+    public static void play() // Main Game
     {
-        game = new Game(name); // Crea game instance
+        Player player = new Player();
+        game = new Game(player); // Create game instance
         while(game.winner().equals("n")) // Main game loop
         {
             if(game.getTurn()%2==0) game.input();
