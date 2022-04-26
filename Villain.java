@@ -1,6 +1,6 @@
 public class Villain 
 {
-    private int hp, atk, def; // Challenger's hp, atk, and def
+    private int hp, atk, def,numPotions = 8; // Challenger's hp, atk, and def
     private String lastMove = "none", name; // Last Move and name
 
     // Constructor sets value for hp, atk dmg, name, and def
@@ -19,6 +19,8 @@ public class Villain
         this.atk = atk;
         if(atk < 0) atk = 0;
     }
+    public void setPotions(int numPotions) {this.numPotions = numPotions;}
+    public int getPotions() {return numPotions;}
     public String getName(){return name;}
     public int getAtk(){return atk;}
     public void setHp(int hp){this.hp = hp;}

@@ -7,7 +7,7 @@ import java.security.*;
 Password for Dungeon is "Secret Word"
 Ideas
 Counter Attack 50% chance + crit if opponent attacks on next turn
-animations
+animation
 */
 
 public class Game 
@@ -25,6 +25,11 @@ public class Game
         scan = new Scanner(System.in);
         srand = new SecureRandom();
         this.name = name;
+        out.print("\nChoose a length(1-5): ");
+        int length = Integer.valueOf(scan.nextLine());
+        if(length > 5) length = 5;
+        else if(length < 1) length = 1;
+        numOppsLeft = length;
     }  
 
     // Getters and Setters
@@ -40,15 +45,17 @@ public class Game
     public void newChallenger() // Create a challenger from the villain class
     {
         numOppsLeft--; // Decrease Opponents Left
-        if(numOppsLeft == 1) 
+        if(numOppsLeft == 0) 
         {
             out.println("BOSS LEVEL");
             challenger = new Boss(); // Create Boss if Only One Challenger Remains
+            sDelay(2);
         }
-        else if(numOppsLeft == 2) 
+        else if(numOppsLeft == 1) 
         {
             out.println("The BOSS is Approaching!"); 
             challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2);
+            sDelay(2);
         }
         else if(numOppsLeft > 1) challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2); // Create a regular Character
     }
@@ -155,7 +162,6 @@ public class Game
         out.println("\nTypes of Potions: ");
         printArray(potionMenu);
         String choice = scan.nextLine().toLowerCase();
-        lastMove = "potion";
         if(lastMove.equals("potion"))
         {
             out.println("You already used a potion this turn!");
@@ -172,16 +178,19 @@ public class Game
         }
         else if(choice.contains("atk") || choice.charAt(0) == 'a') 
         {
+            lastMove = "potion";
             atkPotion();
             return;
         }
         else if(choice.contains("defense") || choice.charAt(0) == 'd')
         {
+            lastMove = "potion";
             dPotion();
             return;
         }
         else if(choice.contains("heal") || choice.charAt(0) == 'h')
         {
+            lastMove = "potion";
             hpPotion();
             return;
         }
@@ -198,11 +207,11 @@ public class Game
     {
         miss();
         int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
-        int dmg = critChance == 1 ? atk+critDmg:atk; // Determine amount of Damage
         int cOriginal = challenger.getHp(); // Store computer hp before damage
         int pOriginal = hp; // Store player hp before damage
         if(turn % 2 == 0)
         {
+            int dmg = critChance == 1 ? atk+critDmg:atk; // Determine amount of Damage
             dmg -= challenger.getDef();
             dmg = dmg < 0 ? 0:dmg;
             if(challenger.getLastMove().equals("block"))
@@ -221,6 +230,7 @@ public class Game
         }
         else
         {
+            int dmg = critChance == 1 ? challenger.getAtk()+critDmg:challenger.getAtk(); // Determine amount of Damage
             dmg -= def;
             dmg = dmg < 0 ? 0:dmg;
             if(lastMove.equals("block"))
@@ -317,6 +327,7 @@ public class Game
         }
         else
         {
+            challenger.setPotions(challenger.getPotions()-1);
             challenger.setDef(challenger.getDef()+nextRand);
             printHP();
             out.println("\n" + challenger.getName() + " used a defense potion. Their defense is now " + challenger.getDef());
@@ -337,6 +348,7 @@ public class Game
         }
         else
         {
+            challenger.setPotions(challenger.getPotions()-1);
             challenger.setAtk(challenger.getAtk()+nextRand);
             printHP();
             out.println("\n" + challenger.getName() + " used an Attack Potion. Their Attack increased by " + (challenger.getAtk()-originalAtk) + " damage");
@@ -346,7 +358,7 @@ public class Game
 
     public void hpPotion() // Health Potion
     {
-        double increase = srand.nextInt(2)+0.25;
+        double increase = srand.nextInt(100)/100+0.25;
         int cOriginal=challenger.getHp(),pOriginal=hp;
         if(turn%2==0)
         {
@@ -358,6 +370,7 @@ public class Game
         }
         else
         {
+            challenger.setPotions(challenger.getPotions()-1);
             challenger.setHp((int)(cOriginal+challenger.getHp()*increase));
             printHP();
             potionAnimation(cOriginal,pOriginal,"HP");

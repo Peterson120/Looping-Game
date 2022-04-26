@@ -11,7 +11,7 @@ public class Main
         scan = new Scanner(System.in);
         minigame();
         out.println("\nCongratulations, You have advanced onto the dungeon");
-        Game.sDelay(3);
+        Game.sDelay(2);
         setup();
     }
 
@@ -35,7 +35,6 @@ public class Main
         addValues();
         Game.clearScreen();
         out.println("MINI CHALLENGE\n");
-        Game.sDelay(1);
         int tries = 0;
         do{
             Game.clearScreen();
