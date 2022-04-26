@@ -10,14 +10,14 @@ Ideas
 better hp bars
 animation
 Descriptions for potions and counter attack
-Improve tokens no less than 1 and more informative about errors
+Go to different menu while in menu in tokens
 type i for information of current Screen
 s for stats
 */
 
 public class Game 
 {
-    private int numOppsLeft = 5, turn = 0; // Important Variables for game
+    private int numOppsLeft, turn = 0; // Important Variables for game
     final public static String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
     public static Scanner scan = new Scanner(System.in);    // Scanner
     public static SecureRandom srand = new SecureRandom();  // Secure RNG
@@ -52,13 +52,13 @@ public class Game
             out.println("BOSS LEVEL");
             challenger = new Boss(); // Create Boss if Only One Challenger Remains
             challenger.setBoss(2*player.getLevel()*(player.getAtk()+player.getDef()+player.getHp())); // Set boss parameters
-            sDelay(2);
+            sDelay(3);
         }
         else if(numOppsLeft == 1) 
         {
             out.println("The BOSS is Approaching!"); 
             challenger = new SupportCharacter(2000*player.getLevel()/2,player.getAtk()*player.getLevel()/2,player.getDef()*2); // Create a support character
-            sDelay(2);
+            sDelay(3);
         }
         else if(numOppsLeft > 1) challenger = new SupportCharacter(2000*player.getLevel()/2,player.getAtk()*player.getLevel()/2,player.getDef()*2); // Create a regular Character
     }
