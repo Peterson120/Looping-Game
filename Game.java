@@ -14,7 +14,6 @@ user name
 public class Game 
 {
     private int numOppsLeft = 5, turn = 0, hp = 500,atk = 40,def = 5,playerLevel = 1, critDmg = atk/2, numPotions = 5; // Important Variables for Player
-    private boolean potionUsed = false; // Check if potion was used this turn
     final public static String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
     private static Scanner scan; // Scanner
     public static SecureRandom srand; // Secure RNG
@@ -133,7 +132,6 @@ public class Game
         }
         else if(choice.contains("counter"))
         {
-            potionUsed = false;
             lastMove = "counter";
             turn++;
             return;
@@ -157,7 +155,7 @@ public class Game
         printArray(potionMenu);
         String choice = scan.nextLine().toLowerCase();
         lastMove = "potion";
-        if(potionUsed)
+        if(lastMove.equals("potion"))
         {
             out.println("You already used a potion this turn!");
             sDelay(2);
@@ -214,7 +212,6 @@ public class Game
                 out.println("\n" + challenger.getName() + " blocked " + (100-blockAmount) + "% of your attack");
                 sDelay(2);
             }
-            potionUsed = false;
             challenger.setHp(challenger.getHp()-dmg);
             out.println("You did " + dmg + " damage!");
             lastMove = "basic";
@@ -283,7 +280,6 @@ public class Game
         int cOriginal = challenger.getHp(),pOriginal=hp;
         if(turn % 2 == 0)
         {
-            potionUsed = false;
             out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
             lastMove = "slap";
             challenger.setHp(challenger.getHp()-challenger.getHp()/10);
@@ -313,7 +309,6 @@ public class Game
         potionAnimation(challenger.getHp(),hp,"DEF");
         if(turn%2==0)
         {
-            potionUsed = true;
             numPotions--;
             def += challenger.getAtk()*nextRand;
             printHP();
@@ -334,7 +329,6 @@ public class Game
         potionAnimation(challenger.getHp(),hp,"ATK");
         if(turn % 2 == 0)
         {
-            potionUsed = true;
             numPotions--;
             atk += nextRand;
             printHP();
@@ -355,7 +349,6 @@ public class Game
         int cOriginal=challenger.getHp(),pOriginal=hp;
         if(turn%2==0)
         {
-            potionUsed = true;
             numPotions--;
             hp += pOriginal*increase;
             printHP();
