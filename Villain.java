@@ -1,20 +1,19 @@
 public class Villain 
 {
-    private int hp, atk, def,numPotions = 8; // Challenger's hp, atk, and def
+    private int hp, atk, def,numPotions = 8; // Challenger's hp, atk, def, and num of potions
     private String lastMove = "none", name; // Last Move and name
 
-    // Constructor sets value for hp, atk dmg, name, and def
-    public Villain(int hp,int atk,int def)
+    public Villain(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def
     {
-        this.hp = hp;
-        this.atk = atk;
-        this.def = def;
-        Names randName = new Names();
-        name = randName.getName();
+        this.hp = hp; // Set Hp
+        this.atk = atk; // Set Atk
+        this.def = def; // Set defense
+        Names randName = new Names(); // New name instance
+        name = randName.getName(); // Set name
     }
 
     // Getters and Setters
-    public void setBoss(int max)
+    public void setBoss(int max) // Set boss parameters
     {
         hp = Game.srand.nextInt(max/2) + 100;
         atk = Game.srand.nextInt(max/3) + 50;
@@ -40,38 +39,38 @@ public class Villain
     {
         Game.clearScreen();
         Main.game.printHP();
-        int type = Game.srand.nextInt(10);
-        if(type > 4 || lastMove.equals("potion")) //attack
+        int type = Game.srand.nextInt(10); // Get a random number
+        if(type > 4 || lastMove.equals("potion")) // Attack if number is higher than 4
         {
-            int typeAtk = Game.srand.nextInt(4);
-            if(typeAtk<=1) 
+            int typeAtk = Game.srand.nextInt(4); // Get another number
+            if(typeAtk<=1) // Basic Attack
             {
                 lastMove = "basic";
-                Main.game.basic();
+                Main.game.basic(); // Basic attack function
             }
-            else if(typeAtk == 2) 
+            else if(typeAtk == 2) // Counter Attack
             {
                 lastMove = "counter";
-                Main.game.setTurn(Main.game.getTurn()+1);
+                Main.game.setTurn(Main.game.getTurn()+1); // Set turn
             }
-            else
+            else // Slap Attack
             {
                 lastMove = "slap";
-                Main.game.slap();
+                Main.game.slap(); // Game.slap() function
             }
         }
         else if(type < 3) // potion
         {
-            int potionType = Game.srand.nextInt(3);
-            lastMove = "potion";
-            if(potionType == 0) Main.game.atkPotion();
-            else if(potionType == 1) Main.game.dPotion();
-            else Main.game.hpPotion();
+            int potionType = Game.srand.nextInt(3); // Random number
+            lastMove = "potion"; // Set move to potion
+            if(potionType == 0) Main.game.atkPotion(); // ATK potion
+            else if(potionType == 1) Main.game.dPotion(); // Defense Potion
+            else Main.game.hpPotion(); // Health Potion
         }
         else // Block
         {
-            Main.game.setTurn(Main.game.getTurn()+1);
-            lastMove = "block";
+            Main.game.setTurn(Main.game.getTurn()+1); // Set Turn
+            lastMove = "block"; // Set move to block
         }
     }
 }
