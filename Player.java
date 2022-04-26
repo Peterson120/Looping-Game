@@ -3,6 +3,7 @@ import static java.lang.System.*;
 public class Player 
 {
     private String name,lastMove;
+    int hp; // Removed hp from map to increase blink speed
     private Map<String, Integer> values;
 
     public Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def if it is a villain
@@ -12,7 +13,7 @@ public class Player
         values = new HashMap<String,Integer>(); // Initialize HashMap
         setPotions(8); // Set number of potions
         setLastMove(""); // Initialize LastMove in Hash
-        setMap(hp, atk, def);
+        setMap(atk, def);
     }
 
     public Player() // Constructor for Player
@@ -26,8 +27,7 @@ public class Player
     }
 
     //Set map Values
-    private void setMap(int hp, int atk, int def) {
-        values.put("hp",hp);
+    private void setMap(int atk, int def) {
         values.put("atk",atk);
         values.put("def",def);
     }
@@ -41,8 +41,8 @@ public class Player
     public int getAtk() {return values.get("atk");}
     public void setAtk(int atk) {values.put("atk",atk);}
 
-    public int getHp() {return values.get("hp");}
-    public void setHp(int hp) {values.put("hp",hp);}
+    public int getHp() {return hp;}
+    public void setHp(int hp) {this.hp=hp;}
 
     public int getDef() {return values.get("def");}
     public void setDef(int def) {values.put("def",def);}
@@ -55,9 +55,9 @@ public class Player
 
     public void setBoss(int max) // Set boss parameters
     {
-        values.put("hp",Game.srand.nextInt(max/2) + 100);
+        hp = Game.srand.nextInt(max/2) + 100;
         values.put("atk",Game.srand.nextInt(max/3) + 50);
-        values.put("def",max-values.get("hp")-values.get("atk"));
+        values.put("def",max-hp-values.get("atk"));
     }
 
     public void turn() // Challenger Take Turn Method
@@ -133,7 +133,8 @@ public class Player
             }
             else if(selection.charAt(0) == 'e')
             {
-                setMap((values.get("hpTok")+1)*500,(values.get("atkTok")+1)*50,(values.get("defTok")+1)*30);
+                setMap((values.get("atkTok")+1)*50,(values.get("defTok")+1)*30);
+                hp = (values.get("hpTok")+1)*500;
                 values.remove("hpTok");
                 values.remove("atkTok");
                 values.remove("defTok");
