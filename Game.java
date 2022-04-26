@@ -42,7 +42,7 @@ public class Game
     public int getDef() {return def;}
     public void setDef(int def) {this.def = def;}
 
-    public void newChallenger() // Create a challenger from the villain class
+    private void newChallenger() // Create a challenger from the villain class
     {
         clearScreen();
         numOppsLeft--; // Decrease Opponents Left
@@ -50,36 +50,36 @@ public class Game
         {
             out.println("BOSS LEVEL");
             challenger = new Boss(); // Create Boss if Only One Challenger Remains
-            challenger.setBoss(2*playerLevel*(atk+def+hp));
+            challenger.setBoss(2*playerLevel*(atk+def+hp)); // Set boss parameters
             sDelay(2);
         }
         else if(numOppsLeft == 1) 
         {
             out.println("The BOSS is Approaching!"); 
-            challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2);
+            challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2); // Create a support character
             sDelay(2);
         }
         else if(numOppsLeft > 1) challenger = new SupportCharacter(2000*playerLevel/2,atk*playerLevel/2,def*2); // Create a regular Character
     }
     
-    public void printChallengerHP(int health) // Print Challengers Hp using "|"
+    private void printChallengerHP(int health) // Print Challengers Hp using "|"
     {
         clearScreen();
         out.print(challenger.getName() + "'s HP:");
-        for(int i = 0; i < 20-challenger.getName().length(); i++) out.print(" ");
+        for(int i = 0; i < 10-challenger.getName().length(); i++) out.print(" ");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
 
-    public void printPlayerHP(int health) // Print Player's Hp using "|"
+    private void printPlayerHP(int health) // Print Player's Hp using "|"
     {
         out.print(name + "'s HP:");
-        for(int i = 0; i < 20-name.length(); i++) out.print(" ");
+        for(int i = 0; i < 10-name.length(); i++) out.print(" ");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
     
-    public void printHP(int challenger,int player) // Print bars using custom health
+    private void printHP(int challenger,int player) // Print bars using custom health
     { 
         printChallengerHP(challenger);
         printPlayerHP(player);
@@ -95,65 +95,65 @@ public class Game
     {
         printHP();
         out.println("\nPossible Moves:");
-        printArray(moves);
-        String input = scan.nextLine().toLowerCase();
-        if(input.length() <= 0) input();
-        else if(input.charAt(0) == 'a' || input.contains("attack"))
+        printArray(moves); // List possible moves
+        String input = scan.nextLine().toLowerCase(); // Get input and make into lowercase
+        if(input.length() <= 0) input(); // Check that input is greater than length 0
+        else if(input.charAt(0) == 'a' || input.contains("attack")) // Attack
         {
-            chooseAttack();
+            chooseAttack(); // Go to Attack Menu
             return;
         }
-        else if(input.charAt(0) == 'p' || input.contains("potion"))
+        else if(input.charAt(0) == 'p' || input.contains("potion")) // Potion
         {
-            choosePotion();
+            choosePotion(); // Go to Potion Menu
             return;
         }
-        else if(input.charAt(0) == 'b' || input.contains("block")) 
+        else if(input.charAt(0) == 'b' || input.contains("block")) // Block
         {
-            lastMove = "block";
-            turn++;
+            lastMove = "block"; // Set move to block
+            turn++; // Increase turn
             return;
         }
-        else if(input.charAt(0) == 'g' || input.contains("give")) 
+        else if(input.charAt(0) == 'g' || input.contains("give")) // Give Up
         {
             clearScreen();
             out.println("Are you sure you want to give up?(y/N)");
-            String user = scan.nextLine();
+            String user = scan.nextLine(); // Confirmation
             if(user.charAt(0) == 'y')
             {
                 printLoss();
                 playAgain();
             }
         }
-        input();
+        input(); // If nothing happened, rerun method
     }
 
     public void chooseAttack() // User chooses attack and appropriate function is called
     {
         printHP();
         out.println("\nTypes of Attacks:");
-        printArray(attackMenu);
-        String choice = scan.nextLine().toLowerCase();
-        if(choice.length() <= 0) chooseAttack();
-        else if(choice.contains("basic") || choice.charAt(0) == 'b')
+        printArray(attackMenu); // List Attacks
+        String choice = scan.nextLine().toLowerCase(); // Get User input
+        if(choice.length() <= 0) chooseAttack(); // Check that input has length greater than 0
+        else if(choice.contains("basic") || choice.charAt(0) == 'b') // Basic Attack
         {
-            basic();
+            basic(); // Go to basic attack method
             return;
         }
-        else if(choice.contains("counter"))
+        else if(choice.contains("counter")) // Counter Attack
         {
-            lastMove = "counter";
-            turn++;
+            lastMove = "counter"; // Set last Move to counter attack
+            turn++; // Increment turn
             return;
         }
-        else if(choice.contains("slap") || choice.charAt(0) == 's')
+        else if(choice.contains("slap") || choice.charAt(0) == 's') // Slap Attack
         {
-            slap();
+            slap(); // Go to slap function
             return;
         }
-        else if(choice.contains("exit") || choice.charAt(0) == 'e') 
+        else if(choice.contains("exit") || choice.charAt(0) == 'e') // Exit Menu
         {
-            input();
+            input(); // Return to input()
             return;
         }
     }
@@ -162,43 +162,43 @@ public class Game
     {
         printHP(challenger.getHp(),hp);
         out.println("\nTypes of Potions: ");
-        printArray(potionMenu);
-        String choice = scan.nextLine().toLowerCase();
-        if(lastMove.equals("potion"))
+        printArray(potionMenu); // List potions
+        String choice = scan.nextLine().toLowerCase(); // Get user Input
+        if(lastMove.equals("potion")) // Check that potion was not already played this turn
         {
             out.println("You already used a potion this turn!");
             sDelay(2);
-            input();
+            input(); // Return to user input function
             return;
         }
-        else if(numPotions <= 0) 
+        else if(numPotions <= 0) //Check that there are enough potions left
         {
             out.println("You have no more potions left");
             sDelay(2);
-            input();
+            input(); // Return to user input function
             return;
         }
-        else if(choice.contains("atk") || choice.charAt(0) == 'a') 
+        else if(choice.contains("atk") || choice.charAt(0) == 'a') // ATK potion
         {
             lastMove = "potion";
-            atkPotion();
+            atkPotion(); // Go to atk potion function
             return;
         }
-        else if(choice.contains("defense") || choice.charAt(0) == 'd')
+        else if(choice.contains("defense") || choice.charAt(0) == 'd') // Defense Potion
         {
             lastMove = "potion";
-            dPotion();
+            dPotion(); // Go to def potion function
             return;
         }
-        else if(choice.contains("heal") || choice.charAt(0) == 'h')
+        else if(choice.contains("heal") || choice.charAt(0) == 'h') // Healing
         {
             lastMove = "potion";
             hpPotion();
             return;
         }
-        else if(choice.contains("exit") || choice.charAt(0) == 'e') 
+        else if(choice.contains("exit") || choice.charAt(0) == 'e') // Exit
         {
-            input(); 
+            input(); // Return to user input function
             return;
         }
         out.println("Please enter a valid input");
@@ -207,30 +207,29 @@ public class Game
 
     public void basic() // Basic Attack
     {
-        miss();
+        miss(); // Check if attack missed
         int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
         int cOriginal = challenger.getHp(); // Store computer hp before damage
         int pOriginal = hp; // Store player hp before damage
-        if(turn % 2 == 0)
+        if(turn % 2 == 0) // Player Turn
         {
-            int dmg = critChance == 1 ? atk+critDmg:atk; // Determine amount of Damage
-            dmg -= challenger.getDef();
-            dmg = dmg < 0 ? 0:dmg;
-            if(challenger.getLastMove().equals("block"))
+            int dmg = critChance == 1 ? atk+critDmg-challenger.getDef():atk-challenger.getDef(); // Determine amount of Damage
+            dmg = dmg < 0 ? 0:dmg; // Check if damage is negative and set dmg to 0 if it is
+            if(challenger.getLastMove().equals("block")) // Check if challenger's move was block
             {
-                int blockAmount = block();
-                dmg *= blockAmount;
+                int blockAmount = block(); // Determine block percentage
+                dmg *= blockAmount; // Multiply attack dmg by block percentage and divide by 100
                 dmg/=100;
                 out.println("\n" + challenger.getName() + " blocked " + (100-blockAmount) + "% of your attack");
                 sDelay(2);
             }
-            challenger.setHp(challenger.getHp()-dmg);
+            challenger.setHp(challenger.getHp()-dmg); // Set hp
             out.println("You did " + dmg + " damage!");
-            lastMove = "basic";
-            turn++;
-            blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!");
+            lastMove = "basic"; // Set Last move
+            turn++; // Increment turn
+            blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!"); // Blink Health Bar Animation
         }
-        else
+        else // Challenger Turn
         {
             int dmg = critChance == 1 ? challenger.getAtk()+critDmg:challenger.getAtk(); // Determine amount of Damage
             dmg -= def;
@@ -252,9 +251,9 @@ public class Game
         sDelay(1);
     }
 
-    private void blink(int cOriginal, int pOriginal, String message)
+    private void blink(int cOriginal, int pOriginal, String message) // Creates a blink effect
     {
-        for(int i = 0; i < 3; i++) 
+        for(int i = 0; i < 3; i++) // Loop x amount of times
         {
             printHP(cOriginal,pOriginal);
             out.println(message);
@@ -272,14 +271,14 @@ public class Game
         {
             clearScreen();
             printHP();
-            switch(turn%2)
+            switch(turn%2) // Determine player turn
             {
                 case 0:
                     out.println("\nYou Missed");
                     turn++;
                     sDelay(2);
                     challenger.turn();
-                case 1:
+                case 1: // Challenger Turn
                     out.println("\n" + challenger.getName() + " Missed");
                     turn++;
                     sDelay(2);
@@ -290,21 +289,21 @@ public class Game
 
     public void slap() // Slap Attack Logic
     {
-        int cOriginal = challenger.getHp(),pOriginal=hp;
-        if(turn % 2 == 0)
+        int cOriginal = challenger.getHp(),pOriginal=hp; // Store old Health
+        if(turn % 2 == 0) // Player turn
         {
             out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
-            lastMove = "slap";
-            int hpAmount = challenger.getHp()/10-challenger.getDef();
-            hpAmount = hpAmount < 0 ? 0 : hpAmount;
-            int atkAmount = challenger.getAtk()/20+challenger.getDef()/20;
-            atkAmount = atkAmount < 0 ? 0 : atkAmount;
-            challenger.setHp(challenger.getHp()-hpAmount);
-            challenger.setAtk(challenger.getAtk()-atkAmount);
-            turn++;
-            blink(cOriginal,pOriginal,"\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
+            lastMove = "slap"; // Set last move
+            int hpAmount = challenger.getHp()/10-challenger.getDef(); // Helper variable
+            hpAmount = hpAmount < 0 ? 0 : hpAmount; // Determine if variable is negative
+            int atkAmount = challenger.getAtk()/20+challenger.getDef()/20; // Helper Variable
+            atkAmount = atkAmount < 0 ? 0 : atkAmount; // Determine if variable is negative
+            challenger.setHp(challenger.getHp()-hpAmount); // Set Health
+            challenger.setAtk(challenger.getAtk()-atkAmount); // Set Attack
+            turn++; // Increment turn
+            blink(cOriginal,pOriginal,"\nYou used slap! It caused emotional damage to " + challenger.getName() +"!"); // Create blink
         }
-        else
+        else // Challenger Slap
         {
             out.println("\nYou got slapped by " + challenger.getName() + "!");
             int hpAmount = hp/10-def;
