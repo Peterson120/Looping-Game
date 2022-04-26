@@ -21,9 +21,9 @@ public class Game
 
     public Game(String name) // Game Constructor to set scanner, RNG, and a new challenger
     {
-        newChallenger();
         scan = new Scanner(System.in);
         srand = new SecureRandom();
+        newChallenger();
         this.name = name;
         out.print("\nChoose a length(1-5): ");
         int length = Integer.valueOf(scan.nextLine());
