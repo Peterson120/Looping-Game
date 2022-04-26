@@ -351,7 +351,7 @@ public class Game
 
     public void hpPotion() // Health Potion
     {
-        int increase = srand.nextInt(2);
+        double increase = srand.nextInt(2)+0.25;
         int cOriginal=challenger.getHp(),pOriginal=hp;
         if(turn%2==0)
         {
@@ -364,7 +364,7 @@ public class Game
         }
         else
         {
-            challenger.setHp(cOriginal+challenger.getHp()*increase);
+            challenger.setHp((int)(cOriginal+challenger.getHp()*increase));
             printHP();
             potionAnimation(cOriginal,pOriginal,"HP");
             out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-cOriginal) + " health");
