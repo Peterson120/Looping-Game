@@ -13,6 +13,7 @@ public class Player
         values = new HashMap<String,Integer>(); // Initialize HashMap
         setPotions(8); // Set number of potions
         setLastMove(""); // Initialize LastMove in Hash
+        this.hp = hp;
         setMap(atk, def);
     }
 

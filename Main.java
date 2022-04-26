@@ -48,7 +48,7 @@ public class Main
             else out.println("Uh Oh. It looks like you need a code to enter");
             out.println("\nPassword:");
             user = scan.nextLine(); // Get user input
-            if(tries > 0 && secretWord(user)) out.println("HINT: Look through the source code"); // Check that there are more than one tries and that user did not get the word
+            if(tries > 0 && secretWord(user)) out.println("\nHINT: Look through the source code"); // Check that there are more than one tries and that user did not get the word
             Game.sDelay(1);
             tries++; // Increment tries
         }while(secretWord(user)); // Check that input does not match secret word

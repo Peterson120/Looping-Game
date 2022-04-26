@@ -170,7 +170,7 @@ public class Game
         if(player.getLastMove().equals("potion")) // Check that potion was not already played this turn
         {
             out.println("You already used a potion this turn!");
-            sDelay(2);
+            scan.nextLine();
             input(); // Return to user input function
             return;
         }
@@ -219,11 +219,14 @@ public class Game
             int dmg = critChance == 1 ? player.getAtk()+player.getAtk()/3-challenger.getDef():player.getAtk()-challenger.getDef(); // Determine amount of Damage
             dmg = dmg < 0 ? 0:dmg; // Check if damage is negative and set dmg to 0 if it is
             dmg = checkSpecial(turn,dmg);
-            challenger.setHp(challenger.getHp()-dmg); // Set hp
-            out.println("You did " + dmg + " damage!");
+            if(!challenger.getLastMove().equals("counter"))
+            {
+                challenger.setHp(challenger.getHp()-dmg); // Set hp
+                out.println("You did " + dmg + " damage!");
+                blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!"); // Blink Health Bar Animation
+            }
             player.setLastMove("basic");; // Set Last move
             turn++; // Increment turn
-            blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!"); // Blink Health Bar Animation
         }
         else // Challenger Turn
         {
@@ -231,11 +234,14 @@ public class Game
             dmg -= player.getDef();
             dmg = dmg < 0 ? 0:dmg;
             dmg = checkSpecial(turn,dmg);
-            player.setHp(player.getHp()-dmg);
+            if(!player.getLastMove().equals("counter"))
+            {
+                player.setHp(player.getHp()-dmg);
+                out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
+                blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack and did " + dmg + " damage!");
+            }
             challenger.setLastMove("basic");
-            out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
             turn++;
-            blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack and did " + dmg + " damage!");
         }
         out.println("\nPress Enter to continue");
         scan.nextLine();
@@ -262,6 +268,8 @@ public class Game
                 player.setHp((int)(player.getHp()-counterAmount));
                 out.println("\n" + challenger.getName() + " used counter attack! You took " + (pOriginal-player.getHp()) + " damage!");
             }
+            out.println("\nPress Enter to continue");
+            scan.nextLine();
         }
         else
         {
@@ -278,8 +286,9 @@ public class Game
                 challenger.setHp((int)(challenger.getHp()-counterAmount));
                 out.println("\nYou used counter attack!" + challenger.getName() + " took " + (cOriginal-challenger.getHp()) + " damage!");
             }
+            out.println("\nPress Enter to continue");
+            scan.nextLine();
         }
-        sDelay(2);
         return dmg;
     }
 
@@ -507,7 +516,7 @@ public class Game
     public void potionAnimation(int cOriginal,int pOriginal,String type) // Animates Potion Effects
     {
         String body = turn % 2 == 0 ? "!T!  <-- YOU" : "!T!  <-- " + challenger.getName();
-        printHP(cOriginal,pOriginal);
+        printHP();
         out.println("\n\n\n\n O ");
         out.println(body);
         out.println(" |");
@@ -520,7 +529,7 @@ public class Game
         out.println(" | ");
         out.println("/ \\ ");
         mDelay(400);
-        printHP(cOriginal,pOriginal);
+        printHP();
         out.println("\n\n" + type + "++");
         out.println("\n O ");
         out.println(body);
