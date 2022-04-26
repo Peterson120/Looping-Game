@@ -9,9 +9,9 @@ public class Main
     public static void main(String[] args)
     {
         scan = new Scanner(System.in);
-        /* minigame();
+        minigame();
         out.println("\nCongratulations, You have advanced onto the dungeon");
-        Game.sDelay(2); */
+        Game.sDelay(2);
         setup();
     }
 
@@ -82,7 +82,7 @@ public class Main
     {
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 5 potions to start and you gain 3 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks");
-        // Game.sDelay(5);
+        Game.sDelay(5);
         out.println("\nType OK to continue");
         String user = scan.nextLine().toLowerCase();
         if(user.contains("ok")) return;

@@ -6,7 +6,7 @@ import java.security.*;
 /*
 Password for Dungeon is "Secret Word"
 Ideas
-Counter Attack 50% chance + crit if opponent attacks on next turn
+Counter Attack 50% chance + double damage only if opponent attacks on next turn
 animation
 */
 
@@ -23,13 +23,13 @@ public class Game
     {
         scan = new Scanner(System.in);
         srand = new SecureRandom();
-        newChallenger();
         this.name = name;
         out.print("\nChoose a length(1-5): ");
         int length = Integer.valueOf(scan.nextLine());
         if(length > 5) length = 5;
         else if(length < 1) length = 1;
         numOppsLeft = length;
+        newChallenger();
     }  
 
     // Getters and Setters
@@ -44,11 +44,13 @@ public class Game
 
     public void newChallenger() // Create a challenger from the villain class
     {
+        clearScreen();
         numOppsLeft--; // Decrease Opponents Left
         if(numOppsLeft == 0) 
         {
             out.println("BOSS LEVEL");
             challenger = new Boss(); // Create Boss if Only One Challenger Remains
+            challenger.setBoss(playerLevel*(atk+def+hp));
             sDelay(2);
         }
         else if(numOppsLeft == 1) 
@@ -245,7 +247,7 @@ public class Game
             challenger.setLastMove("basic");
             out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
             turn++;
-            blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
+            blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack and did " + dmg + " damage!");
         }
         sDelay(1);
     }
@@ -293,16 +295,24 @@ public class Game
         {
             out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
             lastMove = "slap";
-            challenger.setHp(challenger.getHp()-challenger.getHp()/10);
-            challenger.setAtk(challenger.getAtk()-challenger.getAtk()/20);
+            int hpAmount = challenger.getHp()/10-challenger.getDef();
+            hpAmount = hpAmount < 0 ? 0 : hpAmount;
+            int atkAmount = challenger.getAtk()/20+challenger.getDef()/20;
+            atkAmount = atkAmount < 0 ? 0 : atkAmount;
+            challenger.setHp(challenger.getHp()-hpAmount);
+            challenger.setAtk(challenger.getAtk()-atkAmount);
             turn++;
             blink(cOriginal,pOriginal,"\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
         }
         else
         {
             out.println("\nYou got slapped by " + challenger.getName() + "!");
-            hp-=hp/10;
-            atk-=atk/20;
+            int hpAmount = hp/10-def;
+            hpAmount = hpAmount < 0 ? 0 : hpAmount;
+            int atkAmount = atk/20-def/20;
+            atkAmount = atkAmount < 0 ? 0 : atkAmount;
+            hp-=hpAmount;
+            atk-=atkAmount;
             turn++;
             blink(cOriginal,pOriginal,"\nYou got slapped by " + challenger.getName() + "!");
         }
@@ -460,37 +470,28 @@ public class Game
     {
         String body = turn % 2 == 0 ? "!T!  <-- YOU" : "!T!  <-- " + challenger.getName();
         printHP(cOriginal,pOriginal);
-        out.println("   ");
-        out.println("   ");
-        out.println("   ");
-        out.println(" O ");
+        out.println("\n\n\n\n O ");
         out.println(body);
         out.println(" |");
         out.println("/ \\ ");
         mDelay(400);
         printHP();
-        out.println("   ");
-        out.println("   ");
-        out.println(type + "++");
+        out.println("\n\n\n" + type + "++");
         out.println(" O ");
         out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
         mDelay(400);
         printHP(cOriginal,pOriginal);
-        out.println("   ");
-        out.println(type + "++");
-        out.println("   ");
-        out.println(" O ");
+        out.println("\n\n" + type + "++");
+        out.println("\n O ");
         out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
         mDelay(400);
         printHP();
-        out.println(type + "++");
-        out.println("   ");
-        out.println("   ");
-        out.println(" O ");
+        out.println("\n"+type + "++");
+        out.println("\n\n O ");
         out.println(body);
         out.println(" | ");
         out.println("/ \\ ");

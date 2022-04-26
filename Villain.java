@@ -14,6 +14,12 @@ public class Villain
     }
 
     // Getters and Setters
+    public void setBoss(int max)
+    {
+        hp = Game.srand.nextInt(max/2) + 100;
+        atk = Game.srand.nextInt(max/3) + 50;
+        def = max-hp-atk;
+    }
     public void setAtk(int atk)
     {
         this.atk = atk;
