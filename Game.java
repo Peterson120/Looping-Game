@@ -57,15 +57,15 @@ public class Game
     public void printChallengerHP(int health) // Print Challengers Hp using "|"
     {
         clearScreen();
-        out.print(challenger.getName() + "'s Hp:");
-        for(int i = 0; i < 26-challenger.getName().length()-6; i++) out.print(" ");
+        out.print(challenger.getName() + "'s HP:");
+        for(int i = 0; i < 20-challenger.getName().length(); i++) out.print(" ");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
 
     public void printPlayerHP(int health) // Print Player's Hp using "|"
     {
-        out.print("Player Hp:                ");
+        out.print("Player HP:                ");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
@@ -351,19 +351,22 @@ public class Game
 
     public void hpPotion() // Health Potion
     {
-        double increase = srand.nextInt(2)+0.5;
+        int increase = srand.nextInt(2);
         int cOriginal=challenger.getHp(),pOriginal=hp;
-        potionAnimation(cOriginal,pOriginal,"HP");
         if(turn%2==0)
         {
             potionUsed = true;
             numPotions--;
-            hp *= increase;
+            hp += pOriginal*increase;
+            printHP();
+            potionAnimation(cOriginal,pOriginal,"HP");
             out.println("\nYou used a healing potion and gained " + (hp-pOriginal) + " health");
         }
         else
         {
-            challenger.setHp(challenger.getHp()*((int)increase));
+            challenger.setHp(cOriginal+challenger.getHp()*increase);
+            printHP();
+            potionAnimation(cOriginal,pOriginal,"HP");
             out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-cOriginal) + " health");
         }
         sDelay(2);
