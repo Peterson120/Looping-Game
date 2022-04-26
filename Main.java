@@ -12,23 +12,20 @@ public class Main
         minigame();
         out.println("\nCongratulations, You have advanced onto the dungeon");
         Game.sDelay(3);
+        setup();
+    }
+
+    private static void setup()
+    {
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!\n");
-        out.println("Do you want to begin?(Y/n)");
+        out.println("Enter a name to begin: ");
         String user = scan.nextLine();
-        if(user.length() > 0)
-        {
-            switch(user.toLowerCase())
-            {
-                case "y": break;
-                case "n": 
-                    Game.sDelay(5);
-                    main(args);
-            }
-        }
-        else main(args);
+        if(user.length() <= 0 || user.length() > 20) setup();
+        String letter = (String.valueOf(user.charAt(0))).toUpperCase();
+        user = letter + user.substring(1);
         rules();
-        play();
+        play(user);
     }
 
     private static void minigame()
@@ -82,7 +79,7 @@ public class Main
         return false;
     }
 
-    public static void rules()
+    private static void rules()
     {
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nEvery turn you can choose to Attack, Block or use a potion\nBlocking will block up to 100% damage\nPotions will last until you beat the current challenger \nYou lose if your health reaches 0\nYou start with 500 hp and your HP carries on to the next levels\nYou have 5 potions to start and you gain 3 for each opponent that you beat\nBlocks and Counter Attacks only work on Basic Attacks");
@@ -93,9 +90,9 @@ public class Main
         rules();
     }
 
-    public static void play()
+    public static void play(String name)
     {
-        game = new Game();
+        game = new Game(name);
         while(game.winner().equals("n"))
         {
             if(game.getTurn()%2==0) game.input();

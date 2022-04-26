@@ -7,8 +7,7 @@ import java.security.*;
 Password for Dungeon is "Secret Word"
 Ideas
 Counter Attack 50% chance + crit if opponent attacks on next turn
-slap animation and hp gain animation
-user name
+animations
 */
 
 public class Game 
@@ -18,13 +17,14 @@ public class Game
     private static Scanner scan; // Scanner
     public static SecureRandom srand; // Secure RNG
     private Villain challenger; // Current Challenger
-    private String lastMove = "none"; //Last move to check for blocks and counters
+    private String lastMove = "none",name; //Last move to check for blocks and counters
 
-    public Game() // Game Constructor to set scanner, RNG, and a new challenger
+    public Game(String name) // Game Constructor to set scanner, RNG, and a new challenger
     {
         newChallenger();
         scan = new Scanner(System.in);
         srand = new SecureRandom();
+        this.name = name;
     }  
 
     // Getters and Setters
@@ -64,7 +64,8 @@ public class Game
 
     public void printPlayerHP(int health) // Print Player's Hp using "|"
     {
-        out.print("Player HP:                ");
+        out.print(name + "'s HP:");
+        for(int i = 0; i < 20-name.length(); i++) out.print(" ");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
@@ -432,7 +433,7 @@ public class Game
         if(user.length() > 0) // check that input is longer than 0 characters
         {
             user.toLowerCase(); //set input to lowercase
-            if(user.charAt(0) == 'y') Main.play(); //if user wants to play again run main function
+            if(user.charAt(0) == 'y') Main.play(name); //if user wants to play again run main function
             else if(user.charAt(0) == 'n') { //otherwise close scanner and exit system
                 scan.close();
                 exit(0);
@@ -444,7 +445,7 @@ public class Game
 
     public void potionAnimation(int cOriginal,int pOriginal,String type) // Animates Potion Effects
     {
-        String body = turn % 2 == 0 ? "!T!  <-- YOU" : "!T!  <-- OPP";
+        String body = turn % 2 == 0 ? "!T!  <-- YOU" : "!T!  <-- " + challenger.getName();
         printHP(cOriginal,pOriginal);
         out.println("   ");
         out.println("   ");
