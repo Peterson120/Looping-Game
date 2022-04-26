@@ -17,7 +17,7 @@ public class Game
     private static Scanner scan; // Scanner
     public static SecureRandom srand; // Secure RNG
     private Villain challenger; // Current Challenger
-    private String lastMove = "none",name; //Last move to check for blocks and counters
+    private String lastMove = "none",name; // Last move to check for blocks and counters
 
     public Game(String name) // Game Constructor to set scanner, RNG, and a new challenger
     {
