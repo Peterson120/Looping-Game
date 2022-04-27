@@ -48,8 +48,8 @@ public class Main
             user = scan.nextLine(); // Get user input
             if(secretWord(user)) // Check that there are more than one tries and that user did not get the word
             {
-                out.println("Looks like the code was incorrect\n");
-                out.println("\nHINT: Look through the source code");
+                out.println("Looks like the code was incorrect");
+                out.println("HINT: Look through the source code");
                 out.println("\nPress Enter to continue");
                 scan.nextLine(); // Buffer
             }

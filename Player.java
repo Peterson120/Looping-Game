@@ -105,10 +105,13 @@ class Player
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!");
         out.println("\nEnter a name to begin: ");
-        String name = Main.scan.nextLine(); // Get name
-        if(name.length() <= 0 || name.length() > 10) chooseName();
-        String letter = (String.valueOf(name.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
-        this.name = letter + name.substring(1); // Set name to upppercase letter and the rest of the name
+        String choice = Main.scan.nextLine(); // Get name
+        if(choice.length() <= 0) chooseName(); // If length of name is less than 1 call function again
+        else
+        {
+            String letter = (String.valueOf(choice.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
+            this.name = letter + choice.substring(1); // Set name to upppercase letter and the rest of the name
+        }
     }
     
     private void chooseValues() // Choose player values function

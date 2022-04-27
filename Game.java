@@ -53,21 +53,18 @@ class Game
     private void newChallenger() // Create a challenger from the villain class
     {
         clearScreen();
-        numOppsLeft--; // Decrease Opponents Left
-        if(numOppsLeft == 0) 
+        challenger = new Player(2000*player.getLevel()/2,player.getAtk()*player.getLevel()/2,player.getDef()*2); // Create a support character
+        if(numOppsLeft == 1) 
         {
-            out.println("BOSS LEVEL");
-            challenger = new Player(1,1,1); // Create Boss if Only One Challenger Remains
-            challenger.setBoss(2*player.getLevel()*(player.getAtk()+player.getDef()+player.getHp())); // Set boss parameters
-            sDelay(3); // Buffer
+            out.println("BOSS LEVEL\n");
+            challenger.setBoss(2*player.getLevel()*(player.getAtk()+player.getDef()+player.getHp())); // Set boss parameters override current parameters
         }
-        else if(numOppsLeft == 1) 
+        else if(numOppsLeft == 2) 
         {
-            out.println("The BOSS is Approaching!"); 
-            challenger = new Player(2000*player.getLevel()/2,player.getAtk()*player.getLevel()/2,player.getDef()*2); // Create a support character
-            sDelay(3); // Buffer
+            out.println("The BOSS is Approaching!\n");
         }
-        else if(numOppsLeft > 1) challenger = new Player(2000*player.getLevel()/2,player.getAtk()*player.getLevel()/2,player.getDef()*2); // Create a regular Character
+        out.println("A new challenger approaches you!");
+        sDelay(3); // Buffer
     }
     
     private void printChallengerHP(int health) // Print Challengers Hp using "|"
@@ -493,6 +490,7 @@ class Game
     {
         if(challenger.getHp() <= 0) 
         {
+            numOppsLeft--;
             if(numOppsLeft <= 0)return "player"; // Return Player Wins
             else 
             {
