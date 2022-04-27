@@ -1,5 +1,5 @@
-import java.util.*;
-import static java.lang.System.*;
+import java.util.Map;
+import java.util.HashMap;
 
 /*
 Class with helper functions to store values
@@ -57,8 +57,8 @@ class Player
     private void setName() // Get user's name
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!");
-        out.println("\nEnter a name to begin: ");
+        System.out.println("Welcome to your DOOM DUNGEON!!");
+        System.out.println("\nEnter a name to begin: ");
         String choice = Main.scan.nextLine(); // Get name
         if(choice.length() <= 0) setName(); // If length of name is less than 1 call function again
         else
@@ -84,7 +84,7 @@ class Player
             else if(typeAtk == 2) // Counter Attack
             {
                 lastMove = "counter"; // Set last move
-                out.println("\n" + name + " played a hidden move");
+                System.out.println("\n" + name + " played a hidden move");
                 Game.buffer();
                 Main.game.setTurn(Main.game.getTurn()+1); // Set turn
             }
@@ -106,7 +106,7 @@ class Player
         {
             Main.game.setTurn(Main.game.getTurn()+1); // Set Turn
             lastMove = "block"; // Set move to block
-            out.println("\n" + name + " played a hidden move");
+            System.out.println("\n" + name + " played a hidden move");
             Game.buffer();
         }
     }
@@ -119,15 +119,15 @@ class Player
         values.put("defTok",2);
         String selection = ""; // User input
         Game.clearScreen();
-        out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit");
+        System.out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit");
         Game.buffer();
         while(true)  // Infinite loop with break statement
         {
             Game.clearScreen();
-            out.println("Health Tokens: " + values.get("hpTok")); // Print token amounts
-            out.println("Attack Tokens: " + values.get("atkTok"));
-            out.println("Defense Tokens: " + values.get("defTok") + "\n");
-            out.println("Choose a category: [Health, Attack, Defense, Exit]");
+            System.out.println("Health Tokens: " + values.get("hpTok")); // Print token amounts
+            System.out.println("Attack Tokens: " + values.get("atkTok"));
+            System.out.println("Defense Tokens: " + values.get("defTok") + "\n");
+            System.out.println("Choose a category: [Health, Attack, Defense, Exit]");
             selection = Main.scan.nextLine().toLowerCase();
             if(selection.length()<=0) ; // Ensure that user inputted something
             else if(selection.charAt(0) == 'e') // If user types e as the beginning character exit
@@ -142,7 +142,7 @@ class Player
             else if(selection.charAt(0) == 'h' || selection.charAt(0) == 'a' || selection.charAt(0) == 'd') menu(selection.charAt(0)); // Go to selection menu
             else // If input was invalid
             {
-                out.println("Please enter a valid input");
+                System.out.println("Please enter a valid input");
                 Game.buffer();
             }
         }
@@ -155,21 +155,21 @@ class Player
             boolean error = false; // Boolean to check if an error was already thrown
             Game.clearScreen();
             int numTokensLeft = 9-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
-            out.println("You have " + numTokensLeft + " tokens remaining"); // Print amount of token left
-            out.println("Health Tokens: " + values.get("hpTok")); // Print current token values
-            out.println("Attack Tokens: " + values.get("atkTok"));
-            out.println("Defense Tokens: " + values.get("defTok") + "\n");
+            System.out.println("You have " + numTokensLeft + " tokens remaining"); // Print amount of token left
+            System.out.println("Health Tokens: " + values.get("hpTok")); // Print current token values
+            System.out.println("Attack Tokens: " + values.get("atkTok"));
+            System.out.println("Defense Tokens: " + values.get("defTok") + "\n");
 
             switch(selection) // Print menu based on selection
             {
                 case 'h':
-                    out.println("Health tokens:");
+                    System.out.println("Health tokens:");
                     break;
                 case 'a':
-                    out.println("Attack tokens:");
+                    System.out.println("Attack tokens:");
                     break;
                 case 'd':
-                    out.println("Defense tokens:");
+                    System.out.println("Defense tokens:");
                     break;
             }
             String token = Main.scan.nextLine().toLowerCase(); // Get user input
@@ -178,7 +178,7 @@ class Player
             {
                 if(!Character.isDigit(token.charAt(i))&&token.charAt(0)!='a'&&token.charAt(0)!='d'&&token.charAt(0)!='h'&&token.charAt(0)!='e') // Check that the input is a number after the first characters
                 {
-                    out.println("Please enter a number");
+                    System.out.println("Please enter a number");
                     Game.buffer();
                     error = true; // Error occurred
                     break;
@@ -191,7 +191,7 @@ class Player
                 int userTok = Character.isDigit(token.charAt(0)) ? Integer.valueOf(token):Integer.valueOf(token.substring(1)); // Determine the number of token selected
                 if(userTok > numTokensLeft) // If more tokens selected than tokens remaining
                 {
-                    out.println("\nNumber of Tokens selected exceeds currently available tokens");
+                    System.out.println("\nNumber of Tokens selected exceeds currently available tokens");
                     Game.buffer();
                 }
                 else
@@ -219,7 +219,7 @@ class Player
                     case 'h':
                         if(userTok > values.get("hpTok")) // If more tokens selected than hp tokens remaining
                         {
-                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens");
+                            System.out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens");
                             Game.buffer();
                         }
                         else values.put("hpTok",values.get("hpTok")-userTok);
@@ -227,7 +227,7 @@ class Player
                     case 'a':
                         if(userTok > values.get("atkTok")) // If more tokens selected than atk tokens remaining
                         {
-                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens");
+                            System.out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens");
                             Game.buffer();
                         }
                         else values.put("atkTok",values.get("atkTok")-userTok);
@@ -235,7 +235,7 @@ class Player
                     case 'd':
                         if(userTok > values.get("defTok")) // If more tokens selected than def tokens remaining
                         {
-                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens");
+                            System.out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens");
                             Game.buffer();
                         }
                         else values.put("defTok",values.get("defTok")-userTok);
@@ -259,7 +259,7 @@ class Player
                     case 'e':
                         return;
                     default:
-                        out.println("Invalid beginning character");
+                        System.out.println("Invalid beginning character");
                         Game.buffer();
                 }
             }

@@ -1,5 +1,6 @@
-import static java.lang.System.*;
-import java.util.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 Combat game
@@ -19,7 +20,7 @@ public class Main
     {
         scan = new Scanner(System.in); // initialize Scanner
         minigame(); // Create a little minigame
-        out.println("\nCongratulations, You have advanced onto the dungeon");
+        System.out.println("\nCongratulations, You have advanced onto the dungeon");
         Game.buffer();
         setup(); // Setup function
     }
@@ -27,7 +28,7 @@ public class Main
     private static void setup() // Print intro to main game
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n");
+        System.out.println("Welcome to your DOOM DUNGEON!!\n");
 
         text(); // Go to Rules screen
         play(); // Main game loop
@@ -40,14 +41,14 @@ public class Main
         addValues(); // Add Values to array list
         do{
             Game.clearScreen();
-            out.println("MINI CHALLENGE\n");
-            out.println("Uh Oh. It looks like you need a code to enter");
-            out.println("\nPassword:");
+            System.out.println("MINI CHALLENGE\n");
+            System.out.println("Uh Oh. It looks like you need a code to enter");
+            System.out.println("\nPassword:");
             user = scan.nextLine(); // Get user input
             if(secretWord(user)) // Check that there are more than one tries and that user did not get the word
             {
-                out.println("\nLooks like the code was incorrect");
-                out.println("HINT: Look through the source code");
+                System.out.println("\nLooks like the code was incorrect");
+                System.out.println("HINT: Look through the source code");
                 Game.buffer();
             }
         }while(secretWord(user)); // Check that input does not match secret word
@@ -95,7 +96,7 @@ public class Main
     private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is a typical rpg\nYou fight against villains and you lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent");
+        System.out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is a typical rpg\nYou fight against villains and you lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent");
         Game.buffer();
     }
 
