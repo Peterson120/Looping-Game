@@ -108,7 +108,7 @@ public class Main
             if(game.getTurn()%2 == 0) game.input(); // If user's turn get user input
             else game.getVillain().turn(); // Otherwise get challenger's move
         }
-        if(game.winner().equals("player")) game.printWin(); // Get winner and prnt win if player
+        if(game.winner().equals("player")) game.printWin(); // Get winner and print win if player
         else game.printLoss(); // Else print lose
         game.playAgain(); // Ask if user wants to play again
     }

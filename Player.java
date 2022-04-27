@@ -64,7 +64,7 @@ class Player
         else
         {
             String letter = (String.valueOf(choice.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
-            this.name = letter + choice.substring(1); // Set name to upppercase letter and the rest of the name
+            this.name = letter + choice.substring(1); // Set name to uppercase letter and the rest of the name
         }
     }
 
@@ -180,7 +180,7 @@ class Player
                 {
                     out.println("Please enter a number");
                     Game.buffer();
-                    error = true; // Error occured
+                    error = true; // Error occurred
                     break;
                 }
             }

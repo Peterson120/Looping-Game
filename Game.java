@@ -6,6 +6,8 @@ import java.security.*;
 /*
 Password for Dungeon is "Secret Word"
 
+Game class to retain all functions used in the game
+
 Ideas
 animation
 type i for information of current Screen
