@@ -4,17 +4,12 @@ import java.util.List;
 
 /*
 Combat game
-Hints for Secret Word
-    1. Understand what the functions do
-    2. Look at the addValues() function and secretWord() function
-    3. The letters are stored as ASCII values
-    4. Try reverse engineering the function addValues() use a bit of code to help you
-    5. The answer is at the top of the Game class
 */
-public class Main
+class Main
 {
     static Scanner scan;
     static Game game;
+    private static int tokens;
     private static List<Integer> word;
     public static void main(String[] args)
     {
@@ -37,8 +32,10 @@ public class Main
     private static void minigame() // Minigame
     {
         String user;
+        String[] hints = {"Look Through the source code","Understand what the functions do","Look at the addValues() function and secretWord() function","The letters are stored as ASCII values","Try reverse engineering the function addValues() use a bit of code to help you","The answer is <Secret Word>"};
         word = new ArrayList<Integer>(11); // Initialize list
         addValues(); // Add Values to array list
+        int tries = 0;
         do{
             Game.clearScreen();
             System.out.println("MINI CHALLENGE\n");
@@ -48,11 +45,40 @@ public class Main
             if(secretWord(user)) // Check that there are more than one tries and that user did not get the word
             {
                 System.out.println("\nLooks like the code was incorrect");
-                System.out.println("HINT: Look through the source code");
+                System.out.println("HINT: " + hints[tries]);
                 Game.buffer();
             }
+            tries++;
         }while(secretWord(user)); // Check that input does not match secret word
         word.clear();
+        tokens = 6 - tries;
+        System.out.println("\nYou solved the puzzle and you earned " + tokens + " tokens for your Dungeon Character");
+
+        System.out.println("\nPlay another minigame?(Y/n)");
+        String again = scan.nextLine().toLowerCase();
+        if(again.length() <= 0) ; // Override if user has no input
+        else if(again.charAt(0) == 'y') minigame2();
+    }
+
+    private static void minigame2() // Wordle minigame
+    {
+        Game.clearScreen();
+        System.out.println("Welcome to Walter's Word Guessing game!\n\nYou will get extra tokens depending on how many turns you take\nYour goal is to guess the secret word\nIf the letter is in the correct spot it is represented by ✓.\nIf the letter is in the word, it is represented by +\nIf the letter is not in the word it is represented by a *");
+        //Object with specified word
+        Wordle wordGame = new Wordle();
+        
+        int numGuesses = 0;
+        // Determines if the user input matches the word
+        while(!wordGame.getGuess().equals(wordGame.getWord()))
+        {
+            wordGame.getInput();
+            System.out.println(wordGame);
+            numGuesses ++;
+        }
+        int prize = 6-numGuesses;
+        prize = prize < 0 ? 0 : prize;
+        tokens += prize;
+        System.out.println("\nYou earned " + prize + " more tokens for your Dungeon character");
     }
 
     private static void addValues() // Add values to word list
@@ -96,13 +122,13 @@ public class Main
     private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        System.out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is a typical rpg\nYou fight against villains and you lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent");
+        System.out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is an RPG\nYou fight against villains and you lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent");
         Game.buffer();
     }
 
     static void play() // Main Game
     {
-        Player player = new Player();
+        Player player = new Player(tokens);
         game = new Game(player); // Create game instance
         while(game.winner().equals("n")) // Main game loop
         {

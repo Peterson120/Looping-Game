@@ -24,11 +24,11 @@ class Player
         setMap(atk, def); // Set atk and def
     }
 
-    Player() // Constructor for Player
+    Player(int tokens) // Constructor for Player
     {
         values = new HashMap<String,Integer>();
         setName(); // Choose a player name
-        chooseValues(); // Choose tokens
+        chooseValues(tokens); // Choose tokens
         setLastMove(""); // Initialize last move
         setLevel(1); // Set player level
         setPotions(5); // Set number of player potions
@@ -112,14 +112,15 @@ class Player
     }
 
     // Helper Functions
-    private void chooseValues() // Choose player values function
+    private void chooseValues(int tokens) // Choose player values function
     {
         values.put("hpTok",2); // Put token values into hashmap
         values.put("atkTok",2);
         values.put("defTok",2);
+        values.put("earnedTok",tokens);
         String selection = ""; // User input
         Game.clearScreen();
-        System.out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit");
+        System.out.println("TOKEN CHOOSING!!\n\nYou have " + (values.get("hpTok")+values.get("atkTok")+values.get("defTok")+values.get("earnedTok")) + " tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit");
         Game.buffer();
 
         while(true)  // Loop and a half statement
@@ -155,7 +156,7 @@ class Player
         {
             boolean error = false; // Boolean to check if an error was already thrown
             Game.clearScreen();
-            int numTokensLeft = 9-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
+            int numTokensLeft = (values.get("hpTok")+values.get("atkTok")+values.get("defTok")+values.get("earnedTok"))-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
             System.out.println("You have " + numTokensLeft + " tokens remaining"); // Print amount of token left
             System.out.println("Health Tokens: " + values.get("hpTok")); // Print current token values
             System.out.println("Attack Tokens: " + values.get("atkTok"));

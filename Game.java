@@ -17,6 +17,7 @@ Split into more functions
 
 class Game 
 {
+    int tokens;
     private int numOppsLeft, turn = 0; // Important Variables for game
     final static String[] moves = {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
     private static Scanner scan;    // Scanner
