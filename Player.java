@@ -144,8 +144,8 @@ class Player
             else if(selection.charAt(0) == 'h' || selection.charAt(0) == 'a' || selection.charAt(0) == 'd') menu(selection.charAt(0)); // Go to selection menu
             else // If input was invalid
             {
-                out.println("Please enter a valid input\n\nPress Enter to continue");
-                Main.scan.nextLine(); // Acts as timer
+                out.println("Please enter a valid input");
+                Game.buffer();
             }
         }
     }
@@ -180,8 +180,8 @@ class Player
             {
                 if(!Character.isDigit(token.charAt(i))&&token.charAt(0)!='a'&&token.charAt(0)!='d'&&token.charAt(0)!='h'&&token.charAt(0)!='e') // Check that the input is a number after the first characters
                 {
-                    out.println("Please enter a number\n\nPress Enter to Continue");
-                    Main.scan.nextLine(); // Buffer
+                    out.println("Please enter a number");
+                    Game.buffer();
                     error = true; // Error occured
                     break;
                 }
@@ -193,8 +193,8 @@ class Player
                 int userTok = Character.isDigit(token.charAt(0)) ? Integer.valueOf(token):Integer.valueOf(token.substring(1)); // Determine the number of token selected
                 if(userTok > numTokensLeft) // If more tokens selected than tokens remaining
                 {
-                    out.println("\nNumber of Tokens selected exceeds currently available tokens\n\nPress Enter to Continue");
-                    Main.scan.nextLine();
+                    out.println("\nNumber of Tokens selected exceeds currently available tokens");
+                    Game.buffer();
                 }
                 else
                 {
@@ -221,24 +221,24 @@ class Player
                     case 'h':
                         if(userTok > values.get("hpTok")) // If more tokens selected than hp tokens remaining
                         {
-                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens\n\nPress Enter to Continue");
-                            Main.scan.nextLine();
+                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens");
+                            Game.buffer();
                         }
                         else values.put("hpTok",values.get("hpTok")-userTok);
                         break;
                     case 'a':
                         if(userTok > values.get("atkTok")) // If more tokens selected than atk tokens remaining
                         {
-                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens\n\nPress Enter to Continue");
-                            Main.scan.nextLine();
+                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens");
+                            Game.buffer();
                         }
                         else values.put("atkTok",values.get("atkTok")-userTok);
                         break;
                     case 'd':
                         if(userTok > values.get("defTok")) // If more tokens selected than def tokens remaining
                         {
-                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens\n\nPress Enter to Continue");
-                            Main.scan.nextLine();
+                            out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens");
+                            Game.buffer();
                         }
                         else values.put("defTok",values.get("defTok")-userTok);
                         break;
@@ -261,8 +261,8 @@ class Player
                     case 'e':
                         return;
                     default:
-                        out.println("Invalid beginning character\n\nPress Enter to Continue");
-                        Main.scan.nextLine();
+                        out.println("Invalid beginning character");
+                        Game.buffer();
                 }
             }
         }

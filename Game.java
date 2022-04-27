@@ -7,10 +7,7 @@ import java.security.*;
 Password for Dungeon is "Secret Word"
 
 Ideas
-better hp bars
 animation
-Descriptions for potions and counter attack
-Go to different menu while in menu in tokens
 type i for information of current Screen
 s for stats
 commenting
@@ -19,7 +16,7 @@ commenting
 class Game 
 {
     private int numOppsLeft, turn = 0; // Important Variables for game
-    final static String[] moves =  {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
+    final static String[] moves = {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
     private static Scanner scan;    // Scanner
     static SecureRandom srand = new SecureRandom();  // Secure RNG
     private Player challenger; // Current Challenger
@@ -64,22 +61,20 @@ class Game
             out.println("The BOSS is Approaching!\n");
         }
         out.println("A new challenger approaches you!");
-        sDelay(3); // Buffer
+        mDelay(3000); // Buffer
     }
     
     private void printChallengerHP(int health) // Print Challengers Hp using "|"
     {
         clearScreen();
-        out.print(challenger.getName() + "'s HP:");
-        for(int i = 0; i < 10-challenger.getName().length(); i++) out.print(" ");
+        out.println(challenger.getName() + "'s HP:");
         for(int i = 0; i < health/40; i++) out.print("|");
-        out.println("");
+        out.println("\n");
     }
 
     private void printPlayerHP(int health) // Print Player's Hp using "|"
     {
-        out.print(player.getName() + "'s HP:");
-        for(int i = 0; i < 10-player.getName().length(); i++) out.print(" ");
+        out.println(player.getName() + "'s HP:");
         for(int i = 0; i < health/40; i++) out.print("|");
         out.println("");
     }
@@ -173,15 +168,15 @@ class Game
         String choice = scan.nextLine().toLowerCase(); // Get user Input
         if(player.getLastMove().equals("potion")) // Check that potion was not already played this turn
         {
-            out.println("You already used a potion this turn!");
-            scan.nextLine();
+            out.println("You already used a potion this turn!\n");
+            buffer();
             input(); // Return to user input function
             return;
         }
         else if(player.getPotions() <= 0) // Check that there are enough potions left
         {
-            out.println("You have no more potions left");
-            scan.nextLine();
+            out.println("You have no more potions left\n");
+            buffer();
             input(); // Return to user input function
             return;
         }
@@ -214,41 +209,42 @@ class Game
 
     void basic() // Basic Attack need to add counter attack
     {
-        miss(); // Check if attack missed
-        int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
-        int cOriginal = challenger.getHp(); // Store computer hp before damage
-        int pOriginal = player.getHp(); // Store player hp before damage
-        if(turn % 2 == 0) // Player Turn
+        if(!miss()) // Check if attack missed
         {
-            int dmg = critChance == 1 ? player.getAtk()+player.getAtk()/3-challenger.getDef():player.getAtk()-challenger.getDef(); // Determine amount of Damage
-            dmg = dmg < 0 ? 0:dmg; // Check if damage is negative and set dmg to 0 if it is
-            dmg = checkSpecial(turn,dmg);
-            if(!challenger.getLastMove().equals("counter"))
+            int critChance = srand.nextInt(10); // Determine Random Crit Chance Number
+            int cOriginal = challenger.getHp(); // Store computer hp before damage
+            int pOriginal = player.getHp(); // Store player hp before damage
+            if(turn % 2 == 0) // Player Turn
             {
-                challenger.setHp(challenger.getHp()-dmg); // Set hp
-                out.println("You did " + dmg + " damage!");
-                blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!"); // Blink Health Bar Animation
+                int dmg = critChance == 1 ? player.getAtk()+player.getAtk()/3-challenger.getDef():player.getAtk()-challenger.getDef(); // Determine amount of Damage
+                dmg = dmg < 0 ? 0:dmg; // Check if damage is negative and set dmg to 0 if it is
+                dmg = checkSpecial(turn,dmg);
+                if(!challenger.getLastMove().equals("counter"))
+                {
+                    challenger.setHp(challenger.getHp()-dmg); // Set hp
+                    out.println("You did " + dmg + " damage!");
+                    blink(cOriginal,pOriginal,"\nYou did " + dmg + " damage!"); // Blink Health Bar Animation
+                    buffer();
+                }
+                player.setLastMove("basic");; // Set Last move
             }
-            player.setLastMove("basic");; // Set Last move
-            turn++; // Increment turn
-        }
-        else // Challenger Turn
-        {
-            int dmg = critChance == 1 ? challenger.getAtk()+challenger.getAtk()/3:challenger.getAtk(); // Determine amount of Damage
-            dmg -= player.getDef();
-            dmg = dmg < 0 ? 0:dmg;
-            dmg = checkSpecial(turn,dmg);
-            if(!player.getLastMove().equals("counter"))
+            else // Challenger Turn
             {
-                player.setHp(player.getHp()-dmg);
-                out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
-                blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack and did " + dmg + " damage!");
+                int dmg = critChance == 1 ? challenger.getAtk()+challenger.getAtk()/3:challenger.getAtk(); // Determine amount of Damage
+                dmg -= player.getDef();
+                dmg = dmg < 0 ? 0:dmg;
+                dmg = checkSpecial(turn,dmg);
+                if(!player.getLastMove().equals("counter"))
+                {
+                    player.setHp(player.getHp()-dmg);
+                    out.println("\n" + challenger.getName() + " used a basic attack a did " + dmg + " damage!");
+                    blink(cOriginal,pOriginal,"\n" + challenger.getName() + " used a basic attack and did " + dmg + " damage!");
+                    buffer();
+                }
+                challenger.setLastMove("basic");
             }
-            challenger.setLastMove("basic");
-            turn++;
         }
-        out.println("\nPress Enter to continue");
-        scan.nextLine();
+        turn++;
     }
 
     private int checkSpecial(int turn, int dmg)
@@ -265,16 +261,14 @@ class Game
                 dmg *= blockAmount; // Multiply attack dmg by block percentage and divide by 100
                 dmg/=100;
                 out.println("\n" + challenger.getName() + " blocked " + (100-blockAmount) + "% of your attack");
-                out.println("\nPress Enter to continue");
-                scan.nextLine();
+                buffer();
             }
             else if(challenger.getLastMove().equals("counter") && counterChance == 1) // If opponent's last move was counter attack
             {
                 double counterAmount = challenger.getAtk()*3/2;
                 player.setHp((int)(player.getHp()-counterAmount));
                 out.println("\n" + challenger.getName() + " used counter attack! You took " + (pOriginal-player.getHp()) + " damage!");
-                out.println("\nPress Enter to continue");
-                scan.nextLine();
+                buffer();
             }
         }
         else
@@ -285,16 +279,14 @@ class Game
                 dmg *= blockAmount;
                 dmg /= 100;
                 out.println("\nYou blocked " + (100 - blockAmount) + "% of " + challenger.getName() + "'s attack");
-                out.println("\nPress Enter to continue");
-                scan.nextLine();
+                buffer();
             }
             else if(player.getLastMove().equals("counter") && counterChance == 1) // If your last move was counter attack
             {
                 double counterAmount = player.getAtk()*3/2;
                 challenger.setHp((int)(challenger.getHp()-counterAmount));
                 out.println("\nYou used counter attack!" + challenger.getName() + " took " + (cOriginal-challenger.getHp()) + " damage!");
-                out.println("\nPress Enter to continue");
-                scan.nextLine();
+                buffer();
             }
         }
         return dmg;
@@ -313,7 +305,7 @@ class Game
         }
     }
 
-    void miss() // Create a chance at missing attack
+    boolean miss() // Create a chance at missing attack
     {
         int missChance = srand.nextInt(100); // Determine Random Miss Chance Number
         if(missChance == 1) // 1% chance of missing attack
@@ -324,18 +316,16 @@ class Game
             {
                 case 0:
                     out.println("\nYou Missed");
-                    turn++;
-                    out.println("\nPress Enter to continue");
-                    scan.nextLine();
-                    challenger.turn();
+                    buffer();
+                    break;
                 case 1: // Challenger Turn
                     out.println("\n" + challenger.getName() + " Missed");
-                    turn++;
-                    out.println("\nPress Enter to continue");
-                    scan.nextLine();
-                    input();
+                    buffer();
+                    break;
             }
+            return true;
         }
+        return false;
     }
 
     void slap() // Slap Attack Logic
@@ -352,7 +342,6 @@ class Game
             challenger.setHp(challenger.getHp()-hpAmount); // Set Health
             challenger.setAtk(challenger.getAtk()-atkAmount); // Set Attack
             challenger.setDef(challenger.getDef()/2); // Set defense
-            turn++; // Increment turn
             blink(cOriginal,pOriginal,"\nYou used slap! It caused emotional damage to " + challenger.getName() +"!"); // Create blink
         }
         else // Challenger Slap same as Player slap but applied on player
@@ -365,11 +354,10 @@ class Game
             player.setHp(player.getHp()-hpAmount);
             player.setAtk(player.getAtk()-atkAmount);
             player.setDef(player.getDef()/2);
-            turn++;
             blink(cOriginal,pOriginal,"\nYou got slapped by " + challenger.getName() + "!");
         }
-        out.println("\nPress Enter to continue");
-        scan.nextLine();
+        turn++;
+        buffer();
     }
 
     private int block() // Return a random block percentage up to 80% with min of 25%
@@ -395,8 +383,7 @@ class Game
             printHP();
             out.println("\n" + challenger.getName() + " used a defense potion. Their defense is now " + challenger.getDef());
         }
-        out.println("\nPress Enter to continue");
-        scan.nextLine();
+        buffer();
     }
 
     void atkPotion() // Attack Potion Logic
@@ -418,8 +405,7 @@ class Game
             printHP();
             out.println("\n" + challenger.getName() + " used an Attack Potion. Their Attack increased by " + (challenger.getAtk()-originalAtk) + " damage");
         }
-        out.println("\nPress Enter to continue");
-        scan.nextLine();
+        buffer();
     }
 
     void hpPotion() // Health Potion
@@ -442,14 +428,7 @@ class Game
             potionAnimation(cOriginal,pOriginal,"HP"); // Animate Health bar
             out.println("\n" + challenger.getName() + " used a healing potion and gained " + (challenger.getHp()-cOriginal) + " health");
         }
-        out.println("\nPress Enter to continue");
-        scan.nextLine();
-    }
-
-    static void sDelay(int seconds) // Create a delay in Seconds
-    {
-        try{SECONDS.sleep(seconds);}
-        catch(Exception InterruptedException){out.println("Cancelled");}
+        buffer();
     }
 
     private void mDelay(int milliseconds) // Create a delay in MS
@@ -469,7 +448,7 @@ class Game
         out.println("    *    *         *    *       *            * *              *        *     *  *");
         out.println("    *     *       *      *     *          * *   * *           *        *      * *");
         out.println("    *       *****         *****            *     *       ***********   *        *");
-        sDelay(4);
+        buffer();
     }
 
     static void printLoss() // Print Player Loss
@@ -483,7 +462,7 @@ class Game
         out.println("    *    *         *    *       *      *          *        *           *  *     ");
         out.println("    *     *       *      *     *       *           *      *            *  *     ");
         out.println("    *       *****         *****        *********     *****     *******    ******");
-        sDelay(4);
+        buffer();
     }
 
     String winner() // Return winner
@@ -553,15 +532,22 @@ class Game
         out.println(body);
         out.println(" | ");
         out.println("/ \\ ");
-        mDelay(700);
+        mDelay(400);
+        blink(cOriginal,pOriginal,"");
     }
 
     private void printArray(String[] arr) {out.println(Arrays.toString(arr));} // Print given Array to String
+
+    static void buffer() // Add a user input buffer
+    {
+        out.println("\n\nPress Enter to continue");
+        Main.scan.nextLine();
+    }
 
     static void clearScreen() // Clear Screen
     {
         out.print("\033[H\033[2J");  // Clear Screen
         out.flush();                 // Flush Screen / Memory
-        //out.print("\u001b[H");       // Set cursor to top
+        out.print("\u001b[H");       // Set cursor to top
     }
 }

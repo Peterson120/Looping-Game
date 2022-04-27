@@ -20,7 +20,7 @@ public class Main
         scan = new Scanner(System.in); // initialize Scanner
         minigame(); // Create a little minigame
         out.println("\nCongratulations, You have advanced onto the dungeon");
-        Game.sDelay(3); // Buffer
+        Game.buffer();
         setup(); // Setup function
     }
 
@@ -48,12 +48,12 @@ public class Main
             user = scan.nextLine(); // Get user input
             if(secretWord(user)) // Check that there are more than one tries and that user did not get the word
             {
-                out.println("Looks like the code was incorrect");
+                out.println("\nLooks like the code was incorrect");
                 out.println("HINT: Look through the source code");
-                out.println("\nPress Enter to continue");
-                scan.nextLine(); // Buffer
+                Game.buffer();
             }
         }while(secretWord(user)); // Check that input does not match secret word
+        word.clear();
     }
 
     private static void addValues() // Add values to word list
@@ -77,12 +77,19 @@ public class Main
         List<Integer> list = new ArrayList<Integer>(user.length()); // Create list with length of user string
         for(int i = 0; i < user.length(); i++) list.add((int)user.charAt(i)); // Add characters to list
         list.replaceAll(n->n*0xCafe);
-        if(word.size() != list.size()) return true; // Check that user input and list size are equal
-        for(int i = 0; i < word.size(); i++)
+        if(word.size() != list.size()) // Check that user input and list size are equal
         {
-            if(list.get(i) - word.get(i) != 0) return true; // Check that there is no difference between word and user input
+            list.clear();
+            return true;
         }
-        word.clear();
+        for(int i = 0; i < word.size(); i++) // Check that there is no difference between word and user input
+        {
+            if(list.get(i) - word.get(i) != 0) 
+            {
+                list.clear();
+                return true;
+            }
+        }
         list.clear();
         return false;
     }
@@ -90,8 +97,8 @@ public class Main
     private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nYou lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent\nYou have 5 potions to start and you gain 3 for each opponent that you beat\n\nPress Enter to Continue");
-        scan.nextLine(); // Wait for user input
+        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nYou lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent\nYou have 5 potions to start and you gain 3 for each opponent that you beat");
+        Game.buffer();
     }
 
     static void play() // Main Game
