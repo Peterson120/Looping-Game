@@ -1,3 +1,4 @@
+/*Choose a random name for the computer*/
 public class Names
 {
     // Large list of names

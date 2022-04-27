@@ -5,6 +5,7 @@ import java.util.List;
 /*
 Combat game
 */
+
 class Main
 {
     static Scanner scan;

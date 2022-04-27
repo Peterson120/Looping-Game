@@ -1,4 +1,6 @@
 import java.util.Scanner;
+
+/*Word game*/
 class Wordle
 {
     // Instance variables
@@ -49,7 +51,7 @@ class Wordle
         guess = guess.toLowerCase();
     }
     
-    private boolean isValidGuess()
+    private boolean isValidGuess() // Check that the guess matches the guessing criteria
     {
         if(guess.length() < 5) // Check that word is at least 5 digits
         {
@@ -57,7 +59,7 @@ class Wordle
             return false;
         }
         guess = guess.substring(0,5);
-        if(!isLetters(guess)) 
+        if(!isLetters(guess))  // If guess contains symbols or digits
         {
             System.out.println("\nPlease enter only characters");
             return false;

@@ -103,7 +103,21 @@ class Game
                 playAgain();
             }
         }
-        input(); // If nothing happened, rerun method
+        else if(input.charAt(0) == 'i' || input.contains("info"))
+        {
+            info("main");
+        }
+        System.out.println("Please enter a valid input");
+        input(); // If input is invalid rerun method
+    }
+
+    private void info(String menu)
+    {
+        clearScreen();
+        System.out.println("Information Menu: ");
+        if(menu.equals("main")) printArray(moves);
+        else if(menu.equals("potion")) printArray(potionMenu);
+        else if(menu.equals("attack")) printArray(attackMenu);
     }
 
     // Attack Functions
