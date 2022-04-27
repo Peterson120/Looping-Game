@@ -11,9 +11,8 @@ Game class to retain all functions used in the game
 Ideas
 animation
 type i for information of current Screen
-s for stats
-commenting
-line spacing
+Information Screen:
+Split into more functions
 */
 
 class Game 
@@ -31,12 +30,11 @@ class Game
         scan = new Scanner(System.in); // Initialize scanner
         this.player = player; // Initialize player
         
-        String user;
-        while(true)
+        String user = "";
+        while(user.length() <= 0)
         {
             System.out.print("\nChoose the number of Opponents(1-5): "); // Allow Player to choose length of game
             user = scan.nextLine();
-            if(user.length() > 0) break; // Check that user had input
         }
         int gameLength = Character.isDigit(user.charAt(0)) ? Integer.parseInt(String.valueOf(user.charAt(0))):3; // If user inputted an invalid character set rounds to 3
         if(gameLength > 5) gameLength = 5; // Set rounds to 5 is rounds is > 5

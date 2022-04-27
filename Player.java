@@ -121,7 +121,8 @@ class Player
         Game.clearScreen();
         System.out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit");
         Game.buffer();
-        while(true)  // Infinite loop with break statement
+
+        while(true)  // Loop and a half statement
         {
             Game.clearScreen();
             System.out.println("Health Tokens: " + values.get("hpTok")); // Print token amounts
@@ -150,7 +151,7 @@ class Player
 
     private void menu(char selection) // Token Selection menu
     {
-        while(true) // Infinite Loop with break statement
+        while(true) // Loop and a half statement
         {
             boolean error = false; // Boolean to check if an error was already thrown
             Game.clearScreen();
@@ -181,7 +182,7 @@ class Player
                     System.out.println("Please enter a number");
                     Game.buffer();
                     error = true; // Error occurred
-                    break;
+                    i = token.length();
                 }
             }
             
@@ -217,27 +218,15 @@ class Player
                 switch(selection) // Switch case depending on current menu
                 {
                     case 'h':
-                        if(userTok > values.get("hpTok")) // If more tokens selected than hp tokens remaining
-                        {
-                            System.out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens");
-                            Game.buffer();
-                        }
+                        if(userTok > values.get("hpTok")) exceeds(selection); // If more tokens selected than hp tokens remaining
                         else values.put("hpTok",values.get("hpTok")-userTok);
                         break;
                     case 'a':
-                        if(userTok > values.get("atkTok")) // If more tokens selected than atk tokens remaining
-                        {
-                            System.out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens");
-                            Game.buffer();
-                        }
+                        if(userTok > values.get("atkTok")) exceeds(selection); // If more tokens selected than atk tokens remaining
                         else values.put("atkTok",values.get("atkTok")-userTok);
                         break;
                     case 'd':
-                        if(userTok > values.get("defTok")) // If more tokens selected than def tokens remaining
-                        {
-                            System.out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens");
-                            Game.buffer();
-                        }
+                        if(userTok > values.get("defTok")) exceeds(selection); // If more tokens selected than def tokens remaining
                         else values.put("defTok",values.get("defTok")-userTok);
                         break;
                 }
@@ -245,7 +234,7 @@ class Player
             }
             else if(!error) // If error was not yet thrown
             {
-                switch(token.charAt(0)) // Switch case depending on token's first character
+                switch(token.charAt(0)) // Switch case depending on token's first character // Switches selection value
                 {
                     case 'a':
                         selection = 'a';
@@ -258,12 +247,28 @@ class Player
                         break;
                     case 'e':
                         return;
-                    default:
+                    default: // If not valid return invalid
                         System.out.println("Invalid beginning character");
                         Game.buffer();
                 }
             }
         }
+    }
+
+    private void exceeds(char selection)
+    {
+        String print = "";
+        switch(selection)
+        {
+            case 'h':
+                print = "Health";
+            case 'd':
+                print = "Defense";
+            case 'a':
+                print = "Attack";
+        }
+        System.out.println("\nNumber of Tokens Selected Exceeds Number of Available " + print + " Tokens");
+        Game.buffer();
     }
 
     void setBoss(int max) // Set boss parameters // max is all the player stats added up and multiplied by level
