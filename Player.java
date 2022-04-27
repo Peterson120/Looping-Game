@@ -1,67 +1,67 @@
 import java.util.*;
 import static java.lang.System.*;
-public class Player 
+class Player 
 {
     private String name,lastMove;
     int hp; // Removed hp from map to increase blink speed
-    private Map<String, Integer> values;
+    private Map<String, Integer> values; // Hashmap for all Player related Values excluding Health
 
-    public Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def if it is a villain
+    Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def for challengers
     {
         Names randName = new Names(); // New name instance
         name = randName.getName(); // Set name
         values = new HashMap<String,Integer>(); // Initialize HashMap
         setPotions(8); // Set number of potions
         setLastMove(""); // Initialize LastMove in Hash
-        this.hp = hp;
-        setMap(atk, def);
+        this.hp = hp; // Set hp
+        setMap(atk, def); // Set atk and def
     }
 
-    public Player() // Constructor for Player
+    Player() // Constructor for Player
     {
         values = new HashMap<String,Integer>();
-        chooseName();
-        chooseValues();
-        setLastMove("");
-        setLevel(1);
-        setPotions(5);
+        chooseName(); // Choose a player name
+        chooseValues(); // Choose tokens
+        setLastMove(""); // Initialize last move
+        setLevel(1); // Set player level
+        setPotions(5); // Set number of player potions
     }
 
-    //Set map Values
-    private void setMap(int atk, int def) {
+    private void setMap(int atk, int def) // Set map Values
+    {
         values.put("atk",atk);
         values.put("def",def);
     }
     
     // Getters and Setters
-    public String getName() {return name;}
+    String getName() {return name;}
 
-    public int getPotions() {return values.get("potions");}
-    public void setPotions(int numPotions) {values.put("potions",numPotions);}
+    int getPotions() {return values.get("potions");}
+    void setPotions(int numPotions) {values.put("potions",numPotions);}
 
-    public int getAtk() {return values.get("atk");}
-    public void setAtk(int atk) {values.put("atk",atk);}
+    int getAtk() {return values.get("atk");}
+    void setAtk(int atk) {values.put("atk",atk);}
 
-    public int getHp() {return hp;}
-    public void setHp(int hp) {this.hp=hp;}
+    int getHp() {return hp;}
+    void setHp(int hp) {this.hp=hp;}
 
-    public int getDef() {return values.get("def");}
-    public void setDef(int def) {values.put("def",def);}
+    int getDef() {return values.get("def");}
+    void setDef(int def) {values.put("def",def);}
 
-    public String getLastMove() {return lastMove;}
-    public void setLastMove(String move) {lastMove = move;}
+    String getLastMove() {return lastMove;}
+    void setLastMove(String move) {lastMove = move;}
 
-    public int getLevel() {return values.get("level");}
-    public void setLevel(int level) {values.put("level",level);}
+    int getLevel() {return values.get("level");}
+    void setLevel(int level) {values.put("level",level);}
 
-    public void setBoss(int max) // Set boss parameters
+    void setBoss(int max) // Set boss parameters // max is all the player stats added up and multiplied by level
     {
-        hp = Game.srand.nextInt(max/2) + 100;
-        values.put("atk",Game.srand.nextInt(max/3) + 50);
-        values.put("def",max-hp-values.get("atk"));
+        hp = Game.srand.nextInt(max/2) + 100; // Get random hp up to 100 + half of maximum
+        values.put("atk",Game.srand.nextInt(max/3) + 50); // Get random Atk DMG up to 50 + one third of max
+        values.put("def",Game.srand.nextInt(max/3) + 20); // Min of 20 def and up to 20 + one third of max
     }
 
-    public void turn() // Challenger Take Turn Method
+    void turn() // Challenger Take Turn Method
     {
         Game.clearScreen();
         Main.game.printHP();
@@ -71,17 +71,17 @@ public class Player
             int typeAtk = Game.srand.nextInt(4); // Get another number
             if(typeAtk<=1) // Basic Attack
             {
-                lastMove = "basic";
+                lastMove = "basic"; // Set Last Move
                 Main.game.basic(); // Basic attack function
             }
             else if(typeAtk == 2) // Counter Attack
             {
-                lastMove = "counter";
+                lastMove = "counter"; // Set last move
                 Main.game.setTurn(Main.game.getTurn()+1); // Set turn
             }
             else // Slap Attack
             {
-                lastMove = "slap";
+                lastMove = "slap"; // Set last Move
                 Main.game.slap(); // Game.slap() function
             }
         }
@@ -100,63 +100,62 @@ public class Player
         }
     }
 
-    private void chooseName()
+    private void chooseName() // Get user's name
     {
         Game.clearScreen();
         out.println("Welcome to your DOOM DUNGEON!!");
         out.println("\nEnter a name to begin: ");
-        String name = Game.scan.nextLine(); // Get name
+        String name = Main.scan.nextLine(); // Get name
         if(name.length() <= 0 || name.length() > 10) chooseName();
         String letter = (String.valueOf(name.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
         this.name = letter + name.substring(1); // Set name to upppercase letter and the rest of the name
     }
     
-    private void chooseValues()
+    private void chooseValues() // Choose player values function
     {
-        values.put("hpTok",3);
+        values.put("hpTok",3); // Put token values into hashmap
         values.put("atkTok",3);
         values.put("defTok",3);
         String selection = ""; // User input
         Game.clearScreen();
-        out.println("You have 12 tokens in total. Each token represents an increase by 500 Health, 50 Attack, or 30 Defense\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit\n\nPress Enter");
-        Game.scan.nextLine();
-        do
+        out.println("TOKEN CHOOSING!!\n\nYou have 12 tokens in total. Each token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit\n\nPress Enter");
+        Main.scan.nextLine(); // Acts as a delay
+        while(true)  // Infinite loop with break statement
         {
             Game.clearScreen();
-            out.println("Health Tokens: " + values.get("hpTok"));
+            out.println("Health Tokens: " + values.get("hpTok")); // Print token amounts
             out.println("Attack Tokens: " + values.get("atkTok"));
             out.println("Defense Tokens: " + values.get("defTok") + "\n");
             out.println("Choose a category: [Health, Attack, Defense, Exit]");
-            selection = Game.scan.nextLine().toLowerCase();
-            if(selection.length()<=0) 
+            selection = Main.scan.nextLine().toLowerCase();
+            if(selection.length()<=0) ; // Ensure that user inputted something
+            else if(selection.charAt(0) == 'e') // If user types e as the beginning character exit
             {
-                out.println("Please enter an input");
-            }
-            else if(selection.charAt(0) == 'e')
-            {
-                setMap((values.get("atkTok")+1)*50,(values.get("defTok")+1)*30);
-                hp = (values.get("hpTok")+1)*500;
-                values.remove("hpTok");
+                setMap((values.get("atkTok")+1)*50,(values.get("defTok")+1)*30); // Set permanent player values
+                hp = (values.get("hpTok")+1)*500; 
+                values.remove("hpTok"); // Remove keys from HashMap
                 values.remove("atkTok");
                 values.remove("defTok");
-                return;
+                return; // Exit Function
             }
-            else if(selection.charAt(0) == 'h' || selection.charAt(0) == 'a' || selection.charAt(0) == 'd') menu(selection.charAt(0));
-            selection = "";
-        }while(selection.equals(""));
+            else if(selection.charAt(0) == 'h' || selection.charAt(0) == 'a' || selection.charAt(0) == 'd') menu(selection.charAt(0)); // Go to selection menu
+            else // If input was invalid
+            {
+                out.println("Please enter a valid input\n\nPress Enter to continue");
+                Main.scan.nextLine(); // Acts as timer
+            }
+        }
     }
 
-    private void menu(char selection)
+    private void menu(char selection) // Token Selection menu
     {
-        String token = "";
-        int numTokensLeft = 12-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
-        do
+        while(true) // Infinite Loop with break statement
         {
-            boolean error = false;
+            boolean error = false; // Boolean to check if an error was already thrown
             Game.clearScreen();
-            numTokensLeft = 12-values.get("hpTok")-values.get("atkTok")-values.get("defTok");
-            out.println("You have " + numTokensLeft + " tokens remaining");
-            out.println("Health Tokens: " + values.get("hpTok"));
+            int numTokensLeft = 12-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
+            out.println("You have " + numTokensLeft + " tokens remaining"); // Print amount of token left
+            out.println("Health Tokens: " + values.get("hpTok")); // Print current token values
             out.println("Attack Tokens: " + values.get("atkTok"));
             out.println("Defense Tokens: " + values.get("defTok") + "\n");
 
@@ -172,27 +171,27 @@ public class Player
                     out.println("Defense tokens:");
                     break;
             }
-            token = Game.scan.nextLine().toLowerCase();
+            String token = Main.scan.nextLine().toLowerCase();
             
-            if(token.contains("e")) return;
             for(int i = 1; i < token.length(); i++) 
             {
                 if(!Character.isDigit(token.charAt(i)))
                 {
                     out.println("Please enter a number\n\nPress Enter to Continue");
-                    Game.scan.nextLine();
+                    Main.scan.nextLine();
                     error = true;
+                    break;
                 }
             }
             
-            if(token.length() <= 1) ; // First case if no input to ensure no exceptions occur
-            else if(token.charAt(0) == '+') 
+            if(token.length() <= 0) ; // First case if no input to ensure no exceptions occur
+            else if(token.charAt(0) == '+' || (Character.isDigit(token.charAt(0)) && !error)) // If character at first position was positive or is a number
             {
-                int userTok = Integer.valueOf(token.substring(1));
+                int userTok = Character.isDigit(token.charAt(0)) ? Integer.valueOf(token):Integer.valueOf(token.substring(1));
                 if(userTok > numTokensLeft)
                 {
                     out.println("\nNumber of Tokens selected exceeds currently available tokens\n\nPress Enter to Continue");
-                    Game.scan.nextLine();
+                    Main.scan.nextLine();
                 }
                 else
                 {
@@ -210,7 +209,7 @@ public class Player
                     }
                 }
             }
-            else if(token.charAt(0) == '-') 
+            else if(token.charAt(0) == '-' && token.length() > 1) // If character at first position was negative
             {
                 int userTok = Integer.valueOf(token.substring(1));
                 switch(selection)
@@ -219,8 +218,7 @@ public class Player
                         if(userTok > values.get("hpTok"))
                         {
                             out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens\n\nPress Enter to Continue");
-                            token = "";
-                            Game.scan.nextLine();
+                            Main.scan.nextLine();
                         }
                         else values.put("hpTok",values.get("hpTok")-userTok);
                         break;
@@ -228,8 +226,7 @@ public class Player
                         if(userTok > values.get("atkTok"))
                         {
                             out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens\n\nPress Enter to Continue");
-                            token = "";
-                            Game.scan.nextLine();
+                            Main.scan.nextLine();
                         }
                         else values.put("atkTok",values.get("atkTok")-userTok);
                         break;
@@ -237,19 +234,32 @@ public class Player
                         if(userTok > values.get("defTok"))
                         {
                             out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens\n\nPress Enter to Continue");
-                            token = "";
-                            Game.scan.nextLine();
+                            Main.scan.nextLine();
                         }
                         else values.put("defTok",values.get("defTok")-userTok);
                         break;
                 }
             }
-            else if(!error)
+            else if(!error) // If error was not yet thrown
             {
-                out.println("Invalid beginning character\n\nPress Enter to Continue");
-                Game.scan.nextLine();
+                switch(token.charAt(0))
+                {
+                    case 'a':
+                        selection = 'a';
+                        break;
+                    case 'd':
+                        selection = 'd';
+                        break;
+                    case 'h':
+                        selection = 'h';
+                        break;
+                    case 'e':
+                        return;
+                    default:
+                        out.println("Invalid beginning character\n\nPress Enter to Continue");
+                        Main.scan.nextLine();
+                }
             }
-            token = "";
-        }while(token.equals(""));
+        }
     }
 }

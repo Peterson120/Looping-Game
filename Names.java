@@ -9,4 +9,3 @@ public class Names
         return names[rand];
     }
 }
-

@@ -12,15 +12,15 @@ Hints for Secret Word
 */
 public class Main
 {
-    private static Scanner scan;
-    public static Game game;
+    static Scanner scan;
+    static Game game;
     private static List<Integer> word;
     public static void main(String[] args)
     {
         scan = new Scanner(System.in); // initialize Scanner
         minigame(); // Create a little minigame
         out.println("\nCongratulations, You have advanced onto the dungeon");
-        Game.sDelay(2);
+        Game.sDelay(3); // Buffer
         setup(); // Setup function
     }
 
@@ -40,21 +40,23 @@ public class Main
         addValues(); // Add Values to array list
         Game.clearScreen();
         out.println("MINI CHALLENGE\n");
-        int tries = 0;
         do{
             Game.clearScreen();
             out.println("MINI CHALLENGE\n");
-            if(tries > 0) out.println("Looks like the code was incorrect.");
-            else out.println("Uh Oh. It looks like you need a code to enter");
+            out.println("Uh Oh. It looks like you need a code to enter");
             out.println("\nPassword:");
             user = scan.nextLine(); // Get user input
-            if(tries > 0 && secretWord(user)) out.println("\nHINT: Look through the source code"); // Check that there are more than one tries and that user did not get the word
-            Game.sDelay(1);
-            tries++; // Increment tries
+            if(secretWord(user)) // Check that there are more than one tries and that user did not get the word
+            {
+                out.println("Looks like the code was incorrect\n");
+                out.println("\nHINT: Look through the source code");
+                out.println("\nPress Enter to continue");
+                scan.nextLine(); // Buffer
+            }
         }while(secretWord(user)); // Check that input does not match secret word
     }
 
-    private static void addValues() // Add values to word list // Go to game block for answer
+    private static void addValues() // Add values to word list
     {
         for(int i = 0; i < 110000; i += 10000) word.add(i);
         word.set(9,5924124);
@@ -70,12 +72,12 @@ public class Main
         word.set(10,5196600);
     }
 
-    private static boolean secretWord(String user) // Check if user input matches word
+    private static boolean secretWord(String user) // Check if user input matches word (not commented because it is a challenge for the user to solve)
     {
-        List<Integer> list = new ArrayList<Integer>(user.length());
+        List<Integer> list = new ArrayList<Integer>(user.length()); // Create list with length of user string
         for(int i = 0; i < user.length(); i++) list.add((int)user.charAt(i)); // Add characters to list
         list.replaceAll(n->n*0xCafe);
-        if(word.size() != list.size()) return true;
+        if(word.size() != list.size()) return true; // Check that user input and list size are equal
         for(int i = 0; i < word.size(); i++)
         {
             if(list.get(i) - word.get(i) != 0) return true; // Check that there is no difference between word and user input
@@ -90,17 +92,17 @@ public class Main
         scan.nextLine(); // Wait for user input
     }
 
-    public static void play() // Main Game
+    static void play() // Main Game
     {
         Player player = new Player();
         game = new Game(player); // Create game instance
         while(game.winner().equals("n")) // Main game loop
         {
-            if(game.getTurn()%2==0) game.input();
-            else game.getVillain().turn();
+            if(game.getTurn()%2 == 0) game.input(); // If user's turn get user input
+            else game.getVillain().turn(); // Otherwise get challenger's move
         }
         if(game.winner().equals("player")) game.printWin(); // Get winner and prnt win if player
-        else Game.printLoss(); // Elise print lose
+        else Game.printLoss(); // Else print lose
         game.playAgain(); // Ask if user wants to play again
     }
 }
