@@ -37,7 +37,7 @@ class Game
             user = scan.nextLine();
             if(user.length() > 0) break; // Check that user had input
         }
-        int length = Character.isDigit(user.charAt(0)) ? Integer.valueOf(user.charAt(0)):3; // If user inputted an invalid character set rounds to 3
+        int length = Character.isDigit(user.charAt(0)) ? Integer.parseInt(String.valueOf(user.charAt(0))):3; // If user inputted an invalid character set rounds to 3
         if(length > 5) length = 5; // Set rounds to 5 is rounds is > 5
         else if(length < 1) length = 1; // Set rounds to 1 is rounds is < 1
         numOppsLeft = length; // Set num of opponents to number of rounds

@@ -3,7 +3,7 @@ import static java.lang.System.*;
 class Player 
 {
     private String name,lastMove;
-    int hp; // Removed hp from map to increase blink speed
+    int hp; // Removed hp from map to increase hp blink speed (was lagging)
     private Map<String, Integer> values; // Hashmap for all Player related Values excluding Health
 
     Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def for challengers
@@ -116,12 +116,12 @@ class Player
     
     private void chooseValues() // Choose player values function
     {
-        values.put("hpTok",3); // Put token values into hashmap
-        values.put("atkTok",3);
-        values.put("defTok",3);
+        values.put("hpTok",2); // Put token values into hashmap
+        values.put("atkTok",2);
+        values.put("defTok",2);
         String selection = ""; // User input
         Game.clearScreen();
-        out.println("TOKEN CHOOSING!!\n\nYou have 12 tokens in total. Each token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit\n\nPress Enter");
+        out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit\n\nPress Enter");
         Main.scan.nextLine(); // Acts as a delay
         while(true)  // Infinite loop with break statement
         {
@@ -156,13 +156,13 @@ class Player
         {
             boolean error = false; // Boolean to check if an error was already thrown
             Game.clearScreen();
-            int numTokensLeft = 12-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
+            int numTokensLeft = 9-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
             out.println("You have " + numTokensLeft + " tokens remaining"); // Print amount of token left
             out.println("Health Tokens: " + values.get("hpTok")); // Print current token values
             out.println("Attack Tokens: " + values.get("atkTok"));
             out.println("Defense Tokens: " + values.get("defTok") + "\n");
 
-            switch(selection)
+            switch(selection) // Print menu based on selection
             {
                 case 'h':
                     out.println("Health tokens:");
@@ -174,15 +174,15 @@ class Player
                     out.println("Defense tokens:");
                     break;
             }
-            String token = Main.scan.nextLine().toLowerCase();
+            String token = Main.scan.nextLine().toLowerCase(); // Get user input
             
             for(int i = 1; i < token.length(); i++) 
             {
-                if(!Character.isDigit(token.charAt(i)))
+                if(!Character.isDigit(token.charAt(i))&&token.charAt(0)!='a'&&token.charAt(0)!='d'&&token.charAt(0)!='h'&&token.charAt(0)!='e') // Check that the input is a number after the first characters
                 {
                     out.println("Please enter a number\n\nPress Enter to Continue");
-                    Main.scan.nextLine();
-                    error = true;
+                    Main.scan.nextLine(); // Buffer
+                    error = true; // Error occured
                     break;
                 }
             }
@@ -190,15 +190,15 @@ class Player
             if(token.length() <= 0) ; // First case if no input to ensure no exceptions occur
             else if(token.charAt(0) == '+' || (Character.isDigit(token.charAt(0)) && !error)) // If character at first position was positive or is a number
             {
-                int userTok = Character.isDigit(token.charAt(0)) ? Integer.valueOf(token):Integer.valueOf(token.substring(1));
-                if(userTok > numTokensLeft)
+                int userTok = Character.isDigit(token.charAt(0)) ? Integer.valueOf(token):Integer.valueOf(token.substring(1)); // Determine the number of token selected
+                if(userTok > numTokensLeft) // If more tokens selected than tokens remaining
                 {
                     out.println("\nNumber of Tokens selected exceeds currently available tokens\n\nPress Enter to Continue");
                     Main.scan.nextLine();
                 }
                 else
                 {
-                    switch(selection)
+                    switch(selection) // Switch case depending on selection's character
                     {
                         case 'h':
                             values.put("hpTok",values.get("hpTok")+userTok);
@@ -210,15 +210,16 @@ class Player
                             values.put("defTok",values.get("defTok")+userTok);
                             break;
                     }
+                    return;
                 }
             }
             else if(token.charAt(0) == '-' && token.length() > 1) // If character at first position was negative
             {
-                int userTok = Integer.valueOf(token.substring(1));
-                switch(selection)
+                int userTok = Integer.valueOf(token.substring(1)); // Determine number of tokens
+                switch(selection) // Switch case depending on current menu
                 {
                     case 'h':
-                        if(userTok > values.get("hpTok"))
+                        if(userTok > values.get("hpTok")) // If more tokens selected than hp tokens remaining
                         {
                             out.println("\nNumber of Tokens Selected Exceeds Number of Available Health Tokens\n\nPress Enter to Continue");
                             Main.scan.nextLine();
@@ -226,7 +227,7 @@ class Player
                         else values.put("hpTok",values.get("hpTok")-userTok);
                         break;
                     case 'a':
-                        if(userTok > values.get("atkTok"))
+                        if(userTok > values.get("atkTok")) // If more tokens selected than atk tokens remaining
                         {
                             out.println("\nNumber of Tokens Selected Exceeds Number of Available Attack Tokens\n\nPress Enter to Continue");
                             Main.scan.nextLine();
@@ -234,7 +235,7 @@ class Player
                         else values.put("atkTok",values.get("atkTok")-userTok);
                         break;
                     case 'd':
-                        if(userTok > values.get("defTok"))
+                        if(userTok > values.get("defTok")) // If more tokens selected than def tokens remaining
                         {
                             out.println("\nNumber of Tokens Selected Exceeds Number of Available Defense Tokens\n\nPress Enter to Continue");
                             Main.scan.nextLine();
@@ -242,10 +243,11 @@ class Player
                         else values.put("defTok",values.get("defTok")-userTok);
                         break;
                 }
+                return;
             }
             else if(!error) // If error was not yet thrown
             {
-                switch(token.charAt(0))
+                switch(token.charAt(0)) // Switch case depending on token's first character
                 {
                     case 'a':
                         selection = 'a';

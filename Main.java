@@ -82,6 +82,8 @@ public class Main
         {
             if(list.get(i) - word.get(i) != 0) return true; // Check that there is no difference between word and user input
         }
+        word.clear();
+        list.clear();
         return false;
     }
 
