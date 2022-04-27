@@ -38,8 +38,6 @@ public class Main
         String user;
         word = new ArrayList<Integer>(11); // Initialize list
         addValues(); // Add Values to array list
-        Game.clearScreen();
-        out.println("MINI CHALLENGE\n");
         do{
             Game.clearScreen();
             out.println("MINI CHALLENGE\n");

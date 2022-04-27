@@ -121,8 +121,8 @@ class Player
         values.put("defTok",2);
         String selection = ""; // User input
         Game.clearScreen();
-        out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit\n\nPress Enter");
-        Main.scan.nextLine(); // Acts as a delay
+        out.println("TOKEN CHOOSING!!\n\nYou have 9 tokens in total. You have one category in each category by default\nEach token represents an increase by 500 Health, 50 Attack, or 30 Defense\nThese will be your starting amounts so choose wisely!\n\nEnter (+/-)+(Integer) to change the number of tokens in the category\nPress 'E' to exit");
+        Game.buffer();
         while(true)  // Infinite loop with break statement
         {
             Game.clearScreen();
