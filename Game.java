@@ -11,6 +11,7 @@ animation
 type i for information of current Screen
 s for stats
 commenting
+line spacing
 */
 
 class Game 
@@ -64,6 +65,19 @@ class Game
         mDelay(3000); // Buffer
     }
     
+    private void blink(int cOriginal, int pOriginal, String message) // Creates a blink effect on health bars
+    {
+        for(int i = 0; i < 3; i++) // Loop x amount of times
+        {
+            printHP(cOriginal,pOriginal);
+            out.println(message);
+            mDelay(200);
+            printHP();
+            out.println(message);
+            mDelay(200);
+        }
+    }
+
     private void printChallengerHP(int health) // Print Challengers Hp using "|"
     {
         clearScreen();
@@ -290,19 +304,6 @@ class Game
             }
         }
         return dmg;
-    }
-
-    private void blink(int cOriginal, int pOriginal, String message) // Creates a blink effect on health
-    {
-        for(int i = 0; i < 3; i++) // Loop x amount of times
-        {
-            printHP(cOriginal,pOriginal);
-            out.println(message);
-            mDelay(200);
-            printHP();
-            out.println(message);
-            mDelay(200);
-        }
     }
 
     boolean miss() // Create a chance at missing attack
