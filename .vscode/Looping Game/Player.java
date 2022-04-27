@@ -17,7 +17,7 @@ class Player
     {
         Names randName = new Names(); // New name instance
         name = randName.getName(); // Set name
-        values = new HashMap<String,Integer>(); // Initialize HashMap
+        values = new HashMap<String,Integer>(4); // Initialize HashMap
         setPotions(8); // Set number of potions
         setLastMove(""); // Initialize LastMove in Hash
         this.hp = hp; // Set hp
@@ -26,7 +26,7 @@ class Player
 
     Player(int tokens) // Constructor for Player
     {
-        values = new HashMap<String,Integer>();
+        values = new HashMap<String,Integer>(9);
         setName(); // Choose a player name
         chooseValues(tokens); // Choose tokens
         setLastMove(""); // Initialize last move
