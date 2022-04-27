@@ -1,11 +1,18 @@
 import java.util.*;
 import static java.lang.System.*;
+
+/*
+Class with helper functions to store values
+Used like an ArrayList but has extra functions that help the game run smoothly
+Stores the Player and Challenger's Health, Attack, Defense, Potions, Name, Last Move and Level
+*/
 class Player 
 {
-    private String name,lastMove;
+    private String name,lastMove; // Name and last move
     int hp; // Removed hp from map to increase hp blink speed (was lagging)
     private Map<String, Integer> values; // Hashmap for all Player related Values excluding Health
 
+    // Constructors
     Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def for challengers
     {
         Names randName = new Names(); // New name instance
@@ -20,22 +27,14 @@ class Player
     Player() // Constructor for Player
     {
         values = new HashMap<String,Integer>();
-        chooseName(); // Choose a player name
+        setName(); // Choose a player name
         chooseValues(); // Choose tokens
         setLastMove(""); // Initialize last move
         setLevel(1); // Set player level
         setPotions(5); // Set number of player potions
     }
 
-    private void setMap(int atk, int def) // Set map Values
-    {
-        values.put("atk",atk);
-        values.put("def",def);
-    }
-    
     // Getters and Setters
-    String getName() {return name;}
-
     int getPotions() {return values.get("potions");}
     void setPotions(int numPotions) {values.put("potions",numPotions);}
 
@@ -54,11 +53,19 @@ class Player
     int getLevel() {return values.get("level");}
     void setLevel(int level) {values.put("level",level);}
 
-    void setBoss(int max) // Set boss parameters // max is all the player stats added up and multiplied by level
+    String getName() {return name;}
+    private void setName() // Get user's name
     {
-        hp = Game.srand.nextInt(max/2) + 100; // Get random hp up to 100 + half of maximum
-        values.put("atk",Game.srand.nextInt(max/3) + 50); // Get random Atk DMG up to 50 + one third of max
-        values.put("def",Game.srand.nextInt(max/3) + 20); // Min of 20 def and up to 20 + one third of max
+        Game.clearScreen();
+        out.println("Welcome to your DOOM DUNGEON!!");
+        out.println("\nEnter a name to begin: ");
+        String choice = Main.scan.nextLine(); // Get name
+        if(choice.length() <= 0) setName(); // If length of name is less than 1 call function again
+        else
+        {
+            String letter = (String.valueOf(choice.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
+            this.name = letter + choice.substring(1); // Set name to upppercase letter and the rest of the name
+        }
     }
 
     void turn() // Challenger Take Turn Method
@@ -77,6 +84,8 @@ class Player
             else if(typeAtk == 2) // Counter Attack
             {
                 lastMove = "counter"; // Set last move
+                out.println("\n" + name + " played a hidden move");
+                Game.buffer();
                 Main.game.setTurn(Main.game.getTurn()+1); // Set turn
             }
             else // Slap Attack
@@ -97,23 +106,12 @@ class Player
         {
             Main.game.setTurn(Main.game.getTurn()+1); // Set Turn
             lastMove = "block"; // Set move to block
+            out.println("\n" + name + " played a hidden move");
+            Game.buffer();
         }
     }
 
-    private void chooseName() // Get user's name
-    {
-        Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!");
-        out.println("\nEnter a name to begin: ");
-        String choice = Main.scan.nextLine(); // Get name
-        if(choice.length() <= 0) chooseName(); // If length of name is less than 1 call function again
-        else
-        {
-            String letter = (String.valueOf(choice.charAt(0))).toUpperCase(); // Get first letter of name and make it uppercase
-            this.name = letter + choice.substring(1); // Set name to upppercase letter and the rest of the name
-        }
-    }
-    
+    // Helper Functions
     private void chooseValues() // Choose player values function
     {
         values.put("hpTok",2); // Put token values into hashmap
@@ -266,5 +264,18 @@ class Player
                 }
             }
         }
+    }
+
+    void setBoss(int max) // Set boss parameters // max is all the player stats added up and multiplied by level
+    {
+        hp = Game.srand.nextInt(max/2) + 100; // Get random hp up to 100 + half of maximum
+        values.put("atk",Game.srand.nextInt(max/3) + 50); // Get random Atk DMG up to 50 + one third of max
+        values.put("def",Game.srand.nextInt(max/3) + 20); // Min of 20 def and up to 20 + one third of max
+    }
+
+    private void setMap(int atk, int def) // Set map Values
+    {
+        values.put("atk",atk);
+        values.put("def",def);
     }
 }

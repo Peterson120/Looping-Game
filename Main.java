@@ -95,7 +95,7 @@ public class Main
     private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin \n\nYou lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent\nYou have 5 potions to start and you gain 3 for each opponent that you beat");
+        out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is a typical rpg\nYou fight against villains and you lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent");
         Game.buffer();
     }
 
@@ -109,7 +109,7 @@ public class Main
             else game.getVillain().turn(); // Otherwise get challenger's move
         }
         if(game.winner().equals("player")) game.printWin(); // Get winner and prnt win if player
-        else Game.printLoss(); // Else print lose
+        else game.printLoss(); // Else print lose
         game.playAgain(); // Ask if user wants to play again
     }
 }
