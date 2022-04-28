@@ -15,8 +15,7 @@ class Player
     // Constructors
     Player(int hp,int atk,int def) // Constructor sets value for hp, atk dmg, name, and def for challengers
     {
-        Names randName = new Names(); // New name instance
-        name = randName.getName(); // Set name
+        Main.readFile("Names.txt",Game.srand.nextInt("Names.txt".length()));
         values = new HashMap<String,Integer>(4); // Initialize HashMap
         setPotions(8); // Set number of potions
         setLastMove(""); // Initialize LastMove in Hash

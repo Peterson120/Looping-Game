@@ -1,4 +1,9 @@
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +57,7 @@ class Main
             tries++;
         }while(secretWord(user)); // Check that input does not match secret word
         word.clear();
-        tokens = 6 - tries;
+        tokens = 7 - tries;
         System.out.println("\nYou solved the puzzle and you earned " + tokens + " tokens for your Dungeon Character");
 
         System.out.println("\nPlay another minigame?(Y/n)");
@@ -70,15 +75,16 @@ class Main
         
         int numGuesses = 0;
         // Determines if the user input matches the word
-        while(!wordGame.getGuess().equals(wordGame.getWord()))
+        while(!(wordGame.getGuess().toLowerCase()).equals(wordGame.getWord()))
         {
-            wordGame.getInput();
-            System.out.println(wordGame);
-            numGuesses ++;
+            wordGame.getInput(); // Get user guess
+            System.out.println(wordGame); // Print hints
+            numGuesses ++; // Increment number of guesses
         }
-        int prize = 6-numGuesses;
-        prize = prize < 0 ? 0 : prize;
-        tokens += prize;
+
+        int prize = 7-numGuesses; // Calculate num of tokens that player gets
+        prize = prize < 0 ? 0 : prize; // Check that num of tokens is not less than 0 or set to 0
+        tokens += prize; // Add prize to tokens
         System.out.println("\nYou earned " + prize + " more tokens for your Dungeon character");
     }
 
@@ -139,5 +145,31 @@ class Main
         if(game.winner().equals("player")) game.printWin(); // Get winner and print win if player
         else game.printLoss(); // Else print lose
         game.playAgain(); // Ask if user wants to play again
+    }
+
+    static String readFile(String file, int line) // Choose a name from the list
+    {
+        int length = fileLength(file);
+        if(line > length) // Check if line is outside file
+        {
+            System.out.println("Index Out of Bounds");
+            return "";
+        }
+        try {return Files.readAllLines(Paths.get(file)).get(line);} // Try getting a line in the list
+        catch (IOException e) {System.out.println(file + " not found");} // File is not found Exception
+        return "";
+    }
+
+    static int fileLength(String file)
+    {
+        int length = 0;
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            while (reader.readLine() != null) length++;
+            reader.close();
+        }
+        catch(Exception e) {System.out.println("File not found");}
+        return length;
     }
 }
