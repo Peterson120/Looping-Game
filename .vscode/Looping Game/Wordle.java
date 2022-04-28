@@ -1,4 +1,3 @@
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,7 +7,6 @@ class Wordle
     // Instance variables
     private String guess = "";
     private Scanner scan;
-    private File file;
     int length; // Num of lines in file
     private ArrayList<String> word; // List to store word to make it harder for user to see what the word is
     private String[] bank;
@@ -22,12 +20,10 @@ class Wordle
      */
     Wordle()
     {
-        length = Main.fileLength("WordBank.txt");
-        file = new File("WordBank.txt"); // Declare WordBank.txt as a file
+        length = Main.fileLength("WordBank.txt"); // Determine length of file
         scan = new Scanner(System.in); // Initialize Scanner
         word = new ArrayList<String>(1); // Initialize word
         bank = new String[length]; // Set Word Bank length
-        addToList(); // Add word to word bank
         word.add(Main.readFile("WordBank.txt", Game.srand.nextInt(length))); // Add random word to list
     }
     
@@ -56,7 +52,8 @@ class Wordle
             
             System.out.print("\nGuess a 5 letter word: \n");
             guess = scan.nextLine();
-            if(guess.equals("quit") || guess.charAt(0) == 'q') 
+            if(guess.length() <= 0) ;
+            else if(guess.equals("quit") || guess.charAt(0) == 'q') 
             {
                 System.out.println("\nAre you sure you want to quit?(Y/n)");
                 String user = scan.nextLine();
@@ -101,21 +98,6 @@ class Wordle
         return true;
     }
 
-    private void addToList() // Adds all words from WordBank.txt to an array
-    {
-        try {
-            Scanner fileRead = new Scanner(file); // Get file with Scanner
-        
-            int i = 0; // Index
-            while (fileRead.hasNextLine()) // Read until last line
-            {
-                bank[i] = fileRead.nextLine();
-                i++;
-            }
-            fileRead.close();
-        } 
-        catch (Exception e) {e.printStackTrace();} // File not found
-    }
     /*
     Existing algorithm
     Modified to use strings instead of numbers
@@ -125,9 +107,10 @@ class Wordle
         int compare;
         int mid = lower + (higher-lower)/2; // Find middle number of higher and lower
 
+        String read = Main.readFile("WordBank.txt", mid);
         if(lower > higher) return -1; // Base Case if word is not in list
-        else if(bank[mid].equals(guess.toLowerCase())) return mid; // If guess is in list return index
-        else compare = guess.toLowerCase().compareToIgnoreCase(bank[mid]); // Compare the two words using ASCII values
+        else if(read.equals(guess.toLowerCase())) return mid; // If guess is in list return index
+        else compare = guess.toLowerCase().compareToIgnoreCase(read); // Compare the two words using ASCII values
 
         if(compare > 0) return binarySearch(mid+1,higher); // If compare is positive take right side
         else return binarySearch(lower,mid-1); // If compare is negative take left side

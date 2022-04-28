@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -87,7 +88,8 @@ class Main
             numGuesses ++; // Increment number of guesses
         }
 
-        int prize = 7-numGuesses; // Calculate num of tokens that player gets
+        log("Log.txt",numGuesses);
+        int prize = average("Log.txt")-numGuesses; // Calculate num of tokens that player gets
         prize = prize < 0 ? 0 : prize; // Check that num of tokens is not less than 0 or set to 0
         tokens += prize; // Add prize to tokens
         System.out.println("\nYou earned " + prize + " more tokens for your Dungeon character");
@@ -165,16 +167,45 @@ class Main
         return "";
     }
 
-    static int fileLength(String file)
+    static int fileLength(String file) // Determine file length
     {
-        int length = 0;
+        int length = 0; // length var
         try
         {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            while (reader.readLine() != null) length++;
-            reader.close();
+            BufferedReader reader = new BufferedReader(new FileReader(file)); // Create buffered Reader for file
+            while (reader.readLine() != null) length++; // Increment length if file has next line
+            reader.close(); // Close reader
         }
-        catch(Exception e) {System.out.println("File not found");}
-        return length;
+        catch(Exception e) {System.out.println("File not found");} // File not found
+        return length; // Return length
+    }
+
+    static int average(String file) // Determine file length
+    {
+        int total = 0; // Total var
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader(file)); // Create buffered Reader for file
+            while (reader.readLine() != null) total+=Integer.valueOf(reader.readLine()); // Increment length if file has next line
+            reader.close(); // Close reader
+        }
+        catch(Exception e) {System.out.println("File not found");} // File not found
+        return total/fileLength(file); // Return length
+    }
+
+    static void log(String file, Object message) // Add things to log
+    {
+        try 
+        {
+            FileWriter write = new FileWriter(file);
+            write.write("\r\n");
+            write.write(String.valueOf(message));
+            write.close();
+        }
+        catch (IOException e) // File not found 
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }  
     }
 }
