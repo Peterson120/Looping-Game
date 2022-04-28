@@ -424,15 +424,20 @@ class Game
         String choice = scan.nextLine().toLowerCase(); // Get user Input
         if(player.getLastMove().equals("potion")) // Check that potion was not already played this turn
         {
-            System.out.println("You already used a potion this turn!\n");
+            System.out.println("You already used a potion this turn!");
             buffer();
             input(); // Return to user input function
             return;
         }
         else if(player.getPotions() <= 0) // Check that there are enough potions left
         {
-            System.out.println("You have no more potions left\n");
+            System.out.println("You have no more potions left");
             buffer();
+            input(); // Return to user input function
+            return;
+        }
+        else if(choice.contains("exit") || choice.charAt(0) == 'e') // Exit
+        {
             input(); // Return to user input function
             return;
         }
@@ -452,11 +457,6 @@ class Game
         {
             player.setLastMove("potion");
             hpPotion();
-            return;
-        }
-        else if(choice.contains("exit") || choice.charAt(0) == 'e') // Exit
-        {
-            input(); // Return to user input function
             return;
         }
         else if(choice.contains("info") || choice.charAt(0) == 'i')
@@ -661,17 +661,16 @@ class Game
     {
         clearScreen();
         System.out.println("Do you want to play again?(Y/n)");
-        String user = scan.nextLine(); //Get user input
-        if(user.length() > 0) // check that input is longer than 0 characters
+        String user = scan.nextLine().toLowerCase(); // Get user input
+        if(user.length() > 0) // Check that input is longer than 0 characters
         {
-            user.toLowerCase(); //set input to lowercase
-            if(user.charAt(0) == 'y') Main.play(); //if user wants to play again run main function
-            else if(user.charAt(0) == 'n') { //otherwise close scanner and exit system
+            if(user.charAt(0) == 'y') Main.play(); // If user wants to play again run main game function
+            else if(user.charAt(0) == 'n') { // Otherwise close scanner and exit system
                 scan.close();
                 System.exit(0);
             }
         }
-        System.out.println("Please enter a valid input"); //if input is invalid tell user to enter a valid input and rerun function
+        System.out.println("Please enter a valid input"); // If input is invalid tell user to enter a valid input and rerun function
         playAgain();
     }
 
