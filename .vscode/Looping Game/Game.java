@@ -10,8 +10,6 @@ Game class to retain all functions used in the game
 
 Ideas
 animation
-type i for information of current Screen
-Information Screen:
 Split into more functions
 */
 
@@ -111,24 +109,126 @@ class Game
         input(); // If input is invalid rerun method
     }
 
-    private void mainInfo()
+    private void mainInfo() // Print information about Main menu
     {
-        do
+        while(true)
         {
             clearScreen();
             System.out.println("Information Menu: ");
+            printArray(moves);
             String user = scan.nextLine().toLowerCase();
-        }while(true);
+            if(user.length() <= 0) System.out.println("\nNo input was detected");
+            else if(user.charAt(0) == 'a' || user.contains("attack"))
+            {
+                System.out.println("\nGo to an attack menu where you can choose moves that will deal damage to your opponent");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'b' || user.contains("block"))
+            {
+                System.out.println("\nBlock your opponent's basic attack\nBlock from 25% to 80% of the opponent's attack\n\nOPPONENT MUST PLAY A BASIC ATTACK");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'p' || user.contains("potion"))
+            {
+                System.out.println("\nGo to a potion menu where you can choose potions that increase your stats");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'e' || user.contains("exit"))
+            {
+                input();
+                return;
+            }
+            buffer();
+        }
     }
 
-    private void potionMenu()
+    private void potionMenu() // Print information about potion menu
     {
-
+        clearScreen();
+        System.out.println("You have a very limited supply of potions at your disposal\nYou get 8 potions to start with and you gain 3 for every opponent you beat\nUse them Wisely");
+        buffer();
+        while(true)
+        {
+            clearScreen();
+            System.out.println("Information Menu: ");
+            printArray(potionMenu);
+            String user = scan.nextLine().toLowerCase();
+            if(user.length() <= 0) System.out.println("\nNo input was detected");
+            else if(user.charAt(0) == 'a' || user.contains("attack"))
+            {
+                System.out.println("\nUse an attack potion that increases your attack damage by anywhere from 5% to 30% of your current attack damage");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'd' || user.contains("def"))
+            {
+                System.out.println("\nUse a defense potion that increases your defense amount by anywhere from 10% to 30% of your current defense");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'h' || user.contains("health"))
+            {
+                System.out.println("\nUse a healing potion that increases your health by anywhere from 15% to 50% of your current health");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'e' || user.contains("exit"))
+            {
+                input();
+                return;
+            }
+            buffer();
+        }
     }
 
-    private void attackMenu()
+    private void attackMenu() // Print information about attack menu
     {
-
+        clearScreen();
+        System.out.println("Welcome to the Attack Menu!");
+        while(true)
+        {
+            clearScreen();
+            System.out.println("Information Menu: ");
+            printArray(attackMenu);
+            String user = scan.nextLine().toLowerCase();
+            if(user.length() <= 0) System.out.println("\nNo input was detected");
+            else if(user.charAt(0) == 's' || user.contains("slap"))
+            {
+                System.out.println("\nUse a slap attack that deals emotional damage to your opponent\nThey will lose some health, defense, and atk value\nTHIS IS THE ONLY ATTACK THAT LOWERS ATK OR DEFENSE OF YOUR OPPONENT");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'b' || user.contains("basic"))
+            {
+                System.out.println("\nAll basic attacks have a 1% chance of missing\nBasic attacks deal the most damage but can be blocked or countered by your opponent");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'c' || user.contains("counter"))
+            {
+                System.out.println("\nIf your opponent uses a basic attack after you use a counter attack you have a 50% chance of using a counter attack\nA counter attack will deal damage to your opponent and you will not take any damage");
+                buffer();
+                input();
+                return;
+            }
+            else if(user.charAt(0) == 'e' || user.contains("exit"))
+            {
+                input();
+                return;
+            }
+            buffer();
+        }
     }
 
     // Attack Functions
@@ -155,6 +255,10 @@ class Game
         {
             slap(); // Go to slap function
             return;
+        }
+        else if(choice.contains("info") || choice.charAt(0) == 'i') // Attack information menu
+        {
+            attackMenu();
         }
         else if(choice.contains("exit") || choice.charAt(0) == 'e') // Exit Menu
         {
@@ -210,7 +314,7 @@ class Game
         {
             System.out.println("\nYou used slap! It caused emotional damage to " + challenger.getName() +"!");
             player.setLastMove("slap");; // Set last move
-            int hpAmount = challenger.getHp()/10-challenger.getDef(); // Helper variable
+            int hpAmount = challenger.getHp()/15-challenger.getDef(); // Helper variable
             int atkAmount = challenger.getAtk()/20+challenger.getDef()/20; // Helper Variable
             hpAmount = hpAmount < 0 ? 0 : hpAmount; // Determine if variable is negative
             atkAmount = atkAmount < 0 ? 0 : atkAmount; // Determine if variable is negative
@@ -222,7 +326,7 @@ class Game
         else // Challenger Slap same as Player slap but applied on player
         {
             System.out.println("\nYou got slapped by " + challenger.getName() + "!");
-            int hpAmount = player.getHp()/10-player.getDef();
+            int hpAmount = player.getHp()/15-player.getDef();
             int atkAmount = player.getAtk()/20-player.getDef()/20;
             hpAmount = hpAmount < 0 ? 0 : hpAmount;
             atkAmount = atkAmount < 0 ? 0 : atkAmount;
@@ -355,6 +459,10 @@ class Game
             input(); // Return to user input function
             return;
         }
+        else if(choice.contains("info") || choice.charAt(0) == 'i')
+        {
+            potionMenu();
+        }
         System.out.println("Please enter a valid input");
         choosePotion(); // If input does not match criteria rerun function
     }
@@ -404,7 +512,7 @@ class Game
 
     void hpPotion() // Health Potion
     {
-        double increase = srand.nextInt(60)/100+1.15; // Random percentage of health to gain back starting at 15% up to 75%
+        double increase = srand.nextInt(35)/100+1.15; // Random percentage of health to gain back starting at 15% up to 50%
         int cOriginal=challenger.getHp(),pOriginal=player.getHp();
         if(turn%2==0)
         {

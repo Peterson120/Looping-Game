@@ -69,7 +69,7 @@ class Main
     private static void minigame2() // Wordle minigame
     {
         Game.clearScreen();
-        System.out.println("Welcome to Walter's Word Guessing game!\n\nYou will get extra tokens depending on how many turns you take\nYour goal is to guess the secret word\nIf the letter is in the correct spot it is represented by ✓.\nIf the letter is in the word, it is represented by +\nIf the letter is not in the word it is represented by a *");
+        System.out.println("Welcome to Walter's Word Guessing game!\n\nYou will get extra tokens depending on how many turns you take\nYour goal is to guess the secret word\nIf the letter is in the correct spot it is represented by ✓.\nIf the letter is in the word, it is represented by +\nIf the letter is not in the word it is represented by a *\n\nType 'quit' to exit");
         //Object with specified word
         Wordle wordGame = new Wordle();
         
@@ -78,6 +78,11 @@ class Main
         while(!(wordGame.getGuess().toLowerCase()).equals(wordGame.getWord()))
         {
             wordGame.getInput(); // Get user guess
+            if(wordGame.getGuess().equals("quit"))
+            {
+                System.out.println("\nYou quit the game and earned no tokens");
+                return;
+            }
             System.out.println(wordGame); // Print hints
             numGuesses ++; // Increment number of guesses
         }
@@ -129,7 +134,7 @@ class Main
     private static void text() // Print rules/tips
     {
         Game.clearScreen();
-        System.out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is an RPG\nYou fight against villains and you lose if your health reaches 0\nYou health carries on to the next level and you gain 150% of your current health after beating an opponent");
+        System.out.println("Welcome to your DOOM DUNGEON!!\n\nSome quick notes before you begin\n\nThis is an RPG\nYou fight against villains and you lose if your health reaches 0\nYour health carries on to the next level and you gain 150% of your current health after beating an opponent");
         Game.buffer();
     }
 

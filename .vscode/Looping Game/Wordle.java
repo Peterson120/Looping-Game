@@ -12,6 +12,7 @@ class Wordle
     int length; // Num of lines in file
     private ArrayList<String> word; // List to store word to make it harder for user to see what the word is
     private String[] bank;
+    boolean error = false;
 
     // All 5 letter English words
 
@@ -55,13 +56,25 @@ class Wordle
             
             System.out.print("\nGuess a 5 letter word: \n");
             guess = scan.nextLine();
-        }while(!isValidGuess()); // Loop while guess is invalid
+            if(guess.equals("quit") || guess.charAt(0) == 'q') 
+            {
+                System.out.println("\nAre you sure you want to quit?(Y/n)");
+                String user = scan.nextLine();
+                if(user.charAt(0) == 'Y')
+                {
+                    guess = "quit";
+                    return;
+                }
+                error = true;
+            }
+        }while(error||!isValidGuess()); // Loop while guess is invalid
         guess = guess.toLowerCase(); // Set guess to lowercase
     }
     
     private boolean isValidGuess() // Check that the guess matches the guessing criteria
     {
-        if(guess.length() != 5) // Check that word is at least 5 digits
+        if(guess.equals("bypass")) return false;
+        else if(guess.length() != 5) // Check that word is at least 5 digits
         {
             System.out.println("\nGuess must be exactly 5 characters long");
             return false;
