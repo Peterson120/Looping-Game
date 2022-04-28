@@ -38,8 +38,6 @@ Clone repository
 ## Folder Structure
 
 The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
 - `lib`: the folder to maintain dependencies
 - `Main.java`: the driver code for the program
 
