@@ -10,7 +10,6 @@
   Following the challenges, you approach the dungeon and find a few guards who are guarding the entrance. You must get through these guards to get to the final level and beat the boss!
  </body>
   
-<br></br>
 <h2> Running the Program </h2>
 To use the following commands please make sure git is installed
 <h3>Ubuntu</h3>
