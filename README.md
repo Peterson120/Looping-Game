@@ -1,4 +1,4 @@
-<h1> WELCOME TO MY GAME </h1>
+<h2> WELCOME TO MY GAME </h2>
 
 ## Game Structure / LORE
 
@@ -8,7 +8,31 @@
   After unlocking the dungeon, a man at the front approaches you and offers you a game. This game will help boost your stack if you are able to get under the average nmber of guesses of other players before you.
   <br></br>
   Following the challenges, you approach the dungeon and find a few guards who are guarding the entrance. You must get through these guards to get to the final level and beat the boss!
+ </body>
   
+<br></br>
+To use the following commands please make sure git is installed
+<br></br>
+<h3>Ubuntu</h3>
+Run this to create a directory in your Home folder. Then change to that directory.
+
+    sudo cd ~ && mkdir Checkers && cd Checkers
+Run this to clone the git project to your folder
+
+    git clone https://github.com/Peterson120/Checkers
+
+<h3>Windows</h3>
+Open command prompt as administrator.
+<br></br>
+Change to home Directory
+    
+    cd C:\User\%user%\
+Make Folder and Change Directory
+    
+    mkdir Checkers && cd Checkers
+Clone repository
+
+    git clone https://github.com/Peterson120/Checkers
   
 ## Folder Structure
 
