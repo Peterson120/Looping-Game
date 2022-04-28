@@ -54,7 +54,7 @@ class Main
                 System.out.println("HINT: " + hints[tries]);
                 Game.buffer();
             }
-            tries++;
+            tries = tries < hints.length ? tries++:tries;
         }while(secretWord(user)); // Check that input does not match secret word
         word.clear();
         tokens = 7 - tries;
