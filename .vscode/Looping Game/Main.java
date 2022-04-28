@@ -89,7 +89,7 @@ class Main
         }
 
         log("Log.txt",numGuesses);
-        int prize = average("Log.txt")-numGuesses; // Calculate num of tokens that player gets
+        int prize = (average("Log.txt")+3)-numGuesses; // Calculate num of tokens that player gets
         prize = prize < 0 ? 0 : prize; // Check that num of tokens is not less than 0 or set to 0
         tokens += prize; // Add prize to tokens
         System.out.println("\nYou earned " + prize + " more tokens for your Dungeon character");
@@ -186,10 +186,14 @@ class Main
         try
         {
             BufferedReader reader = new BufferedReader(new FileReader(file)); // Create buffered Reader for file
-            while (reader.readLine() != null) total+=Integer.valueOf(reader.readLine()); // Increment length if file has next line
+            while (reader.readLine() != null) 
+            {
+                char line = reader.readLine().charAt(0);
+                if(Character.isDigit(line)) total+=Integer.valueOf(reader.readLine()); // Add integer value of word if file has next line
+            }
             reader.close(); // Close reader
         }
-        catch(Exception e) {System.out.println("File not found");} // File not found
+        catch(Exception e) {e.printStackTrace();} // Print error
         return total/fileLength(file); // Return length
     }
 
@@ -197,7 +201,7 @@ class Main
     {
         try 
         {
-            FileWriter write = new FileWriter(file);
+            FileWriter write = new FileWriter(file,true);
             write.write("\r\n");
             write.write(String.valueOf(message));
             write.close();
