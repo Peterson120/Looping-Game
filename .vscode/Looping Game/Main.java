@@ -87,8 +87,8 @@ class Main
             System.out.println(wordGame); // Print hints
             numGuesses ++; // Increment number of guesses
         }
-        log("Log.txt",numGuesses);
         int prize = (average("Log.txt")+3)-numGuesses; // Calculate num of tokens that player gets
+        log("Log.txt",numGuesses);
         prize = prize < 0 ? 0 : prize; // Check that num of tokens is not less than 0 or set to 0
         tokens += prize; // Add prize to tokens
         System.out.println("\nYou earned " + prize + " more tokens for your Dungeon character");
