@@ -1,5 +1,3 @@
-<h2> WELCOME TO MY GAME </h2>
-
 ## Game Structure / LORE
 
 <body> 
