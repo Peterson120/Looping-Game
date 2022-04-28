@@ -105,7 +105,7 @@ class Wordle
         int compare;
         int mid = lower + (higher-lower)/2; // Find middle number of higher and lower
 
-        String read = Main.readFile("WordBank.txt", mid);
+        String read = Main.readFile("WordBank.txt", mid).toLowerCase();
         if(lower > higher) return -1; // Base Case if word is not in list
         else if(read.equals(guess.toLowerCase())) return mid; // If guess is in list return index
         else compare = guess.toLowerCase().compareToIgnoreCase(read); // Compare the two words using ASCII values
