@@ -11,8 +11,8 @@
  </body>
   
 <br></br>
+<h2> Running the Program </h2>
 To use the following commands please make sure git is installed
-<br></br>
 <h3>Ubuntu</h3>
 Create a directory in your Home folder. Then change to that directory.
 
