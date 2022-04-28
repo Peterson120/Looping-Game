@@ -14,13 +14,17 @@
 To use the following commands please make sure git is installed
 <br></br>
 <h3>Ubuntu</h3>
-Run this to create a directory in your Home folder. Then change to that directory.
+Create a directory in your Home folder. Then change to that directory.
 
-    sudo cd ~ && mkdir Checkers && cd Checkers
-Run this to clone the git project to your folder
+    sudo cd ~ && mkdir "Dungeon Game" && cd "Dungeon Game"
+Clone the git project to your folder
 
-    git clone https://github.com/Peterson120/Checkers
-
+    git clone https://github.com/Peterson120/Looping-Game
+    
+Run the code
+    javac *.java && java Main
+    
+</body>
 <h3>Windows</h3>
 Open command prompt as administrator.
 <br></br>
@@ -29,10 +33,10 @@ Change to home Directory
     cd C:\User\%user%\
 Make Folder and Change Directory
     
-    mkdir Checkers && cd Checkers
+    mkdir DungeonGame && cd DungeonGame
 Clone repository
 
-    git clone https://github.com/Peterson120/Checkers
+    git clone https://github.com/Peterson120/Looping-Game
   
 ## Folder Structure
 
@@ -40,5 +44,6 @@ The workspace contains two folders by default, where:
 
 - `src`: the folder to maintain sources
 - `lib`: the folder to maintain dependencies
+- `Main.java`: the driver code for the program
 
 Meanwhile, the compiled output files will be generated in the `bin` folder by default.
