@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /*Word game*/
@@ -8,7 +7,7 @@ class Wordle
     private String guess = "";
     private Scanner scan;
     int length; // Num of lines in file
-    private ArrayList<String> word; // List to store word to make it harder for user to see what the word is
+    private String word; // Store word
     private String[] bank;
     boolean error = false;
 
@@ -22,13 +21,12 @@ class Wordle
     {
         length = Main.fileLength("WordBank.txt"); // Determine length of file
         scan = new Scanner(System.in); // Initialize Scanner
-        word = new ArrayList<String>(1); // Initialize word
         bank = new String[length]; // Set Word Bank length
-        word.add(Main.readFile("WordBank.txt", Game.srand.nextInt(length))); // Add random word to list
+        word = Main.readFile("WordBank.txt", Game.srand.nextInt(length)); // Add random word to list
     }
     
     // Getters
-    String getWord() {return word.get(0);}
+    String getWord() {return word;}
     String getGuess() {return guess;}
 
     // Returns string of what characters guesses were right
@@ -38,8 +36,8 @@ class Wordle
         for(int i = 0; i < guess.length(); i++)
         {
             char character = guess.charAt(i); // Get character at index i
-            if(word.get(0).charAt(i) == character) result += '✓'; // Check if characters of guess and random word at index i equal
-            else if(word.get(0).contains(String.valueOf(character))) result += "+"; // Check if character is in the word
+            if(word.charAt(i) == character) result += '✓'; // Check if characters of guess and random word at index i equal
+            else if(word.contains(String.valueOf(character))) result += "+"; // Check if character is in the word
             else result += "*"; // Case where character is not in the word
         }
         return result;
@@ -53,7 +51,7 @@ class Wordle
             System.out.print("\nGuess a 5 letter word: \n");
             guess = scan.nextLine();
             if(guess.length() <= 0) ;
-            else if(guess.equals("quit") || guess.charAt(0) == 'q') 
+            else if(guess.equals("quit")) 
             {
                 System.out.println("\nAre you sure you want to quit?(Y/n)");
                 String user = scan.nextLine();

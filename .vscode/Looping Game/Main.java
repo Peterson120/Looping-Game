@@ -87,7 +87,6 @@ class Main
             System.out.println(wordGame); // Print hints
             numGuesses ++; // Increment number of guesses
         }
-
         log("Log.txt",numGuesses);
         int prize = (average("Log.txt")+3)-numGuesses; // Calculate num of tokens that player gets
         prize = prize < 0 ? 0 : prize; // Check that num of tokens is not less than 0 or set to 0
@@ -186,15 +185,25 @@ class Main
         try
         {
             BufferedReader reader = new BufferedReader(new FileReader(file)); // Create buffered Reader for file
-            while (reader.readLine() != null) 
+            String line = String.valueOf(reader.readLine()); // Define line to read next line
+            do
             {
-                char line = reader.readLine().charAt(0);
-                if(Character.isDigit(line)) total+=Integer.valueOf(reader.readLine()); // Add integer value of word if file has next line
-            }
+                if(isDigits(line)) total+=Integer.valueOf(line); // Add integer value of word if file has next line
+                line = String.valueOf(reader.readLine());
+            }while(line!="null"); // Check if file has a value
             reader.close(); // Close reader
         }
         catch(Exception e) {e.printStackTrace();} // Print error
         return total/fileLength(file); // Return length
+    }
+
+    static boolean isDigits(String line)
+    {
+        for(int i = 0; i < line.length(); i++)
+        {
+            if(!Character.isDigit(line.charAt(i))) return false;
+        }
+        return true;
     }
 
     static void log(String file, Object message) // Add things to log
