@@ -190,6 +190,8 @@ class Player
             if(token.length() <= 0) ; // First case if no input to ensure no exceptions occur
             else if(token.charAt(0) == '+' || (Character.isDigit(token.charAt(0)) && !error)) // If character at first position was positive or is a number
             {
+                if(token.length()<=1 && token.charAt(0) == '+') token+="1";
+
                 int userTok = Character.isDigit(token.charAt(0)) ? Integer.valueOf(token):Integer.valueOf(token.substring(1)); // Determine the number of token selected
                 if(userTok > numTokensLeft) // If more tokens selected than tokens remaining
                 {
