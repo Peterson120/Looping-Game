@@ -188,22 +188,13 @@ class Main
             String line = String.valueOf(reader.readLine()); // Define line to read next line
             do
             {
-                if(isDigits(line)) total+=Integer.valueOf(line); // Add integer value of word if file has next line
+                if(line.matches("[0-9]+")) total+=Integer.valueOf(line); // Add integer value of word if file has next line
                 line = String.valueOf(reader.readLine());
             }while(line!="null"); // Check if file has a value
             reader.close(); // Close reader
         }
         catch(Exception e) {e.printStackTrace();} // Print error
         return total/fileLength(file); // Return length
-    }
-
-    static boolean isDigits(String line)
-    {
-        for(int i = 0; i < line.length(); i++)
-        {
-            if(!Character.isDigit(line.charAt(i))) return false;
-        }
-        return true;
     }
 
     static void log(String file, Object message) // Add things to log
