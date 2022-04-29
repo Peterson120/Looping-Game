@@ -156,7 +156,7 @@ class Player
         {
             boolean error = false; // Boolean to check if an error was already thrown
             Game.clearScreen();
-            int numTokensLeft = (values.get("hpTok")+values.get("atkTok")+values.get("defTok")+values.get("earnedTok"))-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
+            int numTokensLeft = values.get("earnedTok")+7-values.get("hpTok")-values.get("atkTok")-values.get("defTok"); // Tokens remaining
             System.out.println("You have " + numTokensLeft + " tokens remaining"); // Print amount of token left
             System.out.println("Health Tokens: " + values.get("hpTok")); // Print current token values
             System.out.println("Attack Tokens: " + values.get("atkTok"));
