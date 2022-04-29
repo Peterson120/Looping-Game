@@ -74,7 +74,7 @@ class Wordle
             System.out.println("\nGuess must be exactly 5 characters long");
             return false;
         }
-        if(!isLetters(guess))  // If guess contains symbols or digits
+        if(guess.matches("[^A-Za-z]+"))  // If guess contains symbols or digits
         {
             System.out.println("\nPlease enter only characters");
             return false;
@@ -83,15 +83,6 @@ class Wordle
         {
             System.out.println("\n" + guess + " is not a word");
             return false;
-        }
-        return true;
-    }
-
-    private boolean isLetters(String guess) // Check that guess contains only letters(for runtime complexity)
-    {
-        for(int i = 0; i < guess.length(); i++)
-        {
-            if(!Character.isLetter(guess.charAt(i))) return false;
         }
         return true;
     }
