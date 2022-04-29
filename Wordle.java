@@ -22,7 +22,7 @@ class Wordle
         length = Main.fileLength("WordBank.txt"); // Determine length of file
         scan = new Scanner(System.in); // Initialize Scanner
         bank = new String[length]; // Set Word Bank length
-        word = Main.readFile("WordBank.txt", Game.srand.nextInt(length)); // Add random word to list
+        word = Main.readFile("WordBank.txt", Game.srand.nextInt(length)).toLowerCase(); // Add random word to list
     }
     
     // Getters
