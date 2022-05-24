@@ -9,10 +9,10 @@
  </body>
   
 <h2> Running the Program </h2>
-To use the following commands please make sure git is installed
+To use the following commands please make sure git is installed<br />
+Choose between the stable branch in new branch and the old version from master
 <h3>Ubuntu</h3>
 Create a directory in your Home folder. Then change to that directory.
-Choose between the stable branch in new branch and the old version from master
 
     sudo cd ~ && mkdir "Dungeon Game" && cd "Dungeon Game"
 Clone the git project to your folder
