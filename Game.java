@@ -1,7 +1,9 @@
 import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 import java.security.SecureRandom;
+import java.io.IOException;
 
 /*
 Password for Dungeon is "Secret Word"
@@ -18,22 +20,22 @@ class Game
     int tokens;
     private int numOppsLeft, turn = 0; // Important Variables for game
     final static String[] moves = {"Attack","Block","Potions","Give Up"}, attackMenu = {"Basic","Counter Attack","Slap","Exit"}, potionMenu = {"ATK DMG","Defense","Heal","Exit"}; // Types of moves
-    private static Scanner scan;    // Scanner
+    private static BufferedReader br;    // Scanner
     static SecureRandom srand = new SecureRandom();  // Secure RNG
     private Player challenger; // Current Challenger
     private Player player; // Player
 
     // Game Constructor
-    Game(Player player)
+    Game(Player player)	throws IOException
     {
-        scan = new Scanner(System.in); // Initialize scanner
-        this.player = player; // Initialize player
+		br = new BufferedReader(new InputStreamReader(System.in)); // Initialize scanner
+		this.player = player; // Initialize player
         
         String user = "";
         while(user.length() <= 0)
         {
             System.out.print("\nChoose the number of Opponents(1-5): "); // Allow Player to choose length of game
-            user = scan.nextLine();
+            user = br.readLine();
         }
         int gameLength = Character.isDigit(user.charAt(0)) ? Integer.parseInt(String.valueOf(user.charAt(0))):3; // If user inputted an invalid character set rounds to 3
         if(gameLength > 5) gameLength = 5; // Set rounds to 5 is rounds is > 5
@@ -67,12 +69,12 @@ class Game
     Player getVillain() {return challenger;}
 
     // Main Function
-    void input() // Get user input for type of Attack
+    void input() throws IOException // Get user input for type of Attack
     {
         printHP();
         System.out.println("\nPossible Moves:");
         printArray(moves); // List possible moves
-        String input = scan.nextLine().toLowerCase(); // Get input and make into lowercase
+        String input = br.readLine().toLowerCase(); // Get input and make into lowercase
         if(input.length() <= 0) input(); // Check that input is greater than length 0
         else if(input.charAt(0) == 'a' || input.contains("attack")) // Attack
         {
@@ -94,7 +96,7 @@ class Game
         {
             clearScreen();
             System.out.println("Are you sure you want to give up?(y/N)");
-            String user = scan.nextLine(); // Confirmation
+            String user = br.readLine(); // Confirmation
             if(user.charAt(0) == 'y')
             {
                 printLoss();
@@ -109,14 +111,14 @@ class Game
         input(); // If input is invalid rerun method
     }
 
-    private void mainInfo() // Print information about Main menu
+    private void mainInfo() throws IOException // Print information about Main menu
     {
         while(true)
         {
             clearScreen();
             System.out.println("Information Menu: ");
             printArray(moves);
-            String user = scan.nextLine().toLowerCase();
+            String user = br.readLine().toLowerCase();
             if(user.length() <= 0) System.out.println("\nNo input was detected");
             else if(user.charAt(0) == 'a' || user.contains("attack"))
             {
@@ -148,7 +150,7 @@ class Game
         }
     }
 
-    private void potionMenu() // Print information about potion menu
+    private void potionMenu() throws IOException // Print information about potion menu
     {
         clearScreen();
         System.out.println("You have a very limited supply of potions at your disposal\nYou get 8 potions to start with and you gain 3 for every opponent you beat\nUse them Wisely");
@@ -158,7 +160,7 @@ class Game
             clearScreen();
             System.out.println("Information Menu: ");
             printArray(potionMenu);
-            String user = scan.nextLine().toLowerCase();
+            String user = br.readLine().toLowerCase();
             if(user.length() <= 0) System.out.println("\nNo input was detected");
             else if(user.charAt(0) == 'a' || user.contains("attack"))
             {
@@ -190,7 +192,7 @@ class Game
         }
     }
 
-    private void attackMenu() // Print information about attack menu
+    private void attackMenu() throws IOException // Print information about attack menu
     {
         clearScreen();
         System.out.println("Welcome to the Attack Menu!");
@@ -199,7 +201,7 @@ class Game
             clearScreen();
             System.out.println("Information Menu: ");
             printArray(attackMenu);
-            String user = scan.nextLine().toLowerCase();
+            String user = br.readLine().toLowerCase();
             if(user.length() <= 0) System.out.println("\nNo input was detected");
             else if(user.charAt(0) == 's' || user.contains("slap"))
             {
@@ -232,12 +234,12 @@ class Game
     }
 
     // Attack Functions
-    void chooseAttack() // User chooses attack and appropriate function is called
+    void chooseAttack() throws IOException // User chooses attack and appropriate function is called
     {
         printHP();
         System.out.println("\nTypes of Attacks:");
         printArray(attackMenu); // List Attacks
-        String choice = scan.nextLine().toLowerCase(); // Get User input
+        String choice = br.readLine().toLowerCase(); // Get User input
         if(choice.length() <= 0) chooseAttack(); // Check that input has length greater than 0
         else if(choice.contains("basic") || choice.charAt(0) == 'b') // Basic Attack
         {
@@ -415,13 +417,13 @@ class Game
     }
 
     // Potion Functions
-    void choosePotion() // User chooses potion and appropriate function is called
+    void choosePotion() throws IOException // User chooses potion and appropriate function is called
     {
         printHP(challenger.getHp(),player.getHp());
         System.out.println("\nNumber of Remaining Potions: " + player.getPotions());
         System.out.println("\nTypes of Potions: ");
         printArray(potionMenu); // List potions
-        String choice = scan.nextLine().toLowerCase(); // Get user Input
+        String choice = br.readLine().toLowerCase(); // Get user Input
         if(player.getLastMove().equals("potion")) // Check that potion was not already played this turn
         {
             System.out.println("You already used a potion this turn!");
@@ -657,16 +659,16 @@ class Game
         buffer();
     }
     
-    void playAgain() // Play Again Function
+    void playAgain() throws IOException // Play Again Function
     {
         clearScreen();
         System.out.println("Do you want to play again?(Y/n)");
-        String user = scan.nextLine().toLowerCase(); // Get user input
+        String user = br.readLine().toLowerCase(); // Get user input
         if(user.length() > 0) // Check that input is longer than 0 characters
         {
             if(user.charAt(0) == 'y') Main.play(); // If user wants to play again run main game function
             else if(user.charAt(0) == 'n') { // Otherwise close scanner and exit system
-                scan.close();
+                br.close();
                 System.exit(0);
             }
         }

@@ -18,7 +18,7 @@ class Main
     static Game game;
     private static int tokens;
     private static List<Integer> word;
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         scan = new Scanner(System.in); // initialize Scanner
         minigame(); // Create a little minigame
@@ -27,7 +27,7 @@ class Main
         setup(); // Setup function
     }
 
-    private static void setup() // Print intro to main game
+    private static void setup() throws IOException // Print intro to main game
     {
         Game.clearScreen();
         System.out.println("Welcome to your DOOM DUNGEON!!\n");
@@ -36,7 +36,7 @@ class Main
         play(); // Main game loop
     }
 
-    private static void minigame() // Minigame
+    private static void minigame() throws IOException // Minigame
     {
         String user;
         String[] hints = {"Look Through the source code","Understand what the functions do","Look at the addValues() function and secretWord() function","The letters are stored as ASCII values","Try reverse engineering the function addValues() use a bit of code to help you","The answer is <Secret Word>"};
@@ -67,7 +67,7 @@ class Main
         else if(again.charAt(0) == 'y') minigame2();
     }
 
-    private static void minigame2() // Wordle minigame
+    private static void minigame2() throws IOException // Wordle minigame
     {
         Game.clearScreen();
         System.out.println("Welcome to Walter's Word Guessing game!\n\nYou will get extra tokens depending on how many turns you take\nYour goal is to guess the secret word\nIf the letter is in the correct spot it is represented by ✓.\nIf the letter is in the word, it is represented by +\nIf the letter is not in the word it is represented by a *\n\nType 'quit' to exit");
@@ -139,7 +139,7 @@ class Main
         Game.buffer();
     }
 
-    static void play() // Main Game
+    static void play() throws IOException // Main Game
     {
         Player player = new Player(tokens);
         game = new Game(player); // Create game instance

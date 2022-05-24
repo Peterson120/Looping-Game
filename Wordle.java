@@ -1,11 +1,13 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 /*Word game*/
 class Wordle
 {
     // Instance variables
     private String guess = "";
-    private Scanner scan;
+    private BufferedReader br;
     int length; // Num of lines in file
     private String word; // Store word
     private String[] bank;
@@ -17,10 +19,10 @@ class Wordle
      * Constructor for objects of class CombinationLock
      * Create a WordBank instance and get a word
      */
-    Wordle()
+    Wordle() throws IOException
     {
         length = Main.fileLength("WordBank.txt"); // Determine length of file
-        scan = new Scanner(System.in); // Initialize Scanner
+        br = new BufferedReader(new InputStreamReader(System.in)); // Initialize Scanner
         bank = new String[length]; // Set Word Bank length
         word = Main.readFile("WordBank.txt", Game.srand.nextInt(length)).toLowerCase(); // Add random word to list
     }
@@ -43,18 +45,19 @@ class Wordle
         return result;
     }
 
-    void getInput() // Get user guess
+    void getInput() throws IOException // Get user guess
     {
         guess = ""; // Set guess to an invalid guess
-        do{
-            
+        do
+		{
+			error = false;
             System.out.print("\nGuess a 5 letter word: \n");
-            guess = scan.nextLine();
+            guess = br.readLine();
             if(guess.length() <= 0) ;
             else if(guess.equals("quit")) 
             {
                 System.out.println("\nAre you sure you want to quit?(Y/n)");
-                String user = scan.nextLine();
+                String user = br.readLine();
                 if(user.charAt(0) == 'Y')
                 {
                     guess = "quit";
